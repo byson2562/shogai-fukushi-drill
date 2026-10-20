@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>障害福祉サービス確認テスト</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Old+Mincho:wght@600;700&display=swap">
+<style>
+/* Layout: one reading column (max 720px). Start card → one question per screen with instant 解説 → result with section breakdown. */
+:root {
+  --bg: #f4f6f3;
+  --surface: #ffffff;
+  --fg: #1e2a2d;
+  --muted: #5d6c70;
+  --line: #d6ddd9;
+  --accent: #2d6b8a;
+  --accent-soft: #e1edf3;
+  --ok: #2c7a4f;
+  --ok-soft: #e2f2e8;
+  --ng: #b1443a;
+  --ng-soft: #f8e5e2;
+  --font-body: "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  --font-display: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141a1c; --surface: #1d2528; --fg: #e6ebe9; --muted: #9aa8ab; --line: #334040;
+    --accent: #80b7d2; --accent-soft: #223540; --ok: #7fcf9f; --ok-soft: #1e3a2b; --ng: #e68a7e; --ng-soft: #432724;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141a1c; --surface: #1d2528; --fg: #e6ebe9; --muted: #9aa8ab; --line: #334040;
+  --accent: #80b7d2; --accent-soft: #223540; --ok: #7fcf9f; --ok-soft: #1e3a2b; --ng: #e68a7e; --ng-soft: #432724;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.75;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 48px;
+}
+.wrap { max-width: 720px; margin: 0 auto; display: grid; gap: 20px; }
+header { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 2px solid var(--accent); }
+.eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.3; margin: 0; text-wrap: balance; }
+header p { margin: 0; color: var(--muted); font-size: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px; display: grid; gap: 16px; min-width: 0; }
+h2 { font-family: var(--font-display); font-size: 19px; margin: 0; text-wrap: balance; }
+h3 { font-size: 15px; margin: 0; color: var(--muted); font-weight: 700; }
+.secs { display: grid; gap: 8px; }
+.sec { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+.sec input { width: 18px; height: 18px; accent-color: var(--accent); }
+.sec .n { margin-left: auto; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+label.opt { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+label.opt input { accent-color: var(--accent); width: 16px; height: 16px; }
+button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 10px 18px; }
+button:focus-visible, .sec:focus-within, .choice:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+button.primary:disabled { opacity: .5; cursor: not-allowed; }
+.best { font-size: 13px; color: var(--muted); }
+.top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+.qtype { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 700; margin-right: 6px; vertical-align: middle; }
+.qtext { font-size: 17px; font-weight: 700; margin: 0; line-height: 1.7; }
+.choices { display: grid; gap: 8px; }
+.choice { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; text-align: left; padding: 12px 14px; line-height: 1.6; border: 1.5px solid var(--line); background: var(--surface); }
+.choice:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.choice:disabled { cursor: default; }
+.choice .k { font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.choice.correct { border-color: var(--ok); background: var(--ok-soft); }
+.choice.correct .k { color: var(--ok); }
+.choice.wrong { border-color: var(--ng); background: var(--ng-soft); }
+.choice.wrong .k { color: var(--ng); }
+.verdict { font-weight: 700; font-size: 17px; }
+.verdict.ok { color: var(--ok); }
+.verdict.ng { color: var(--ng); }
+.exp { border-left: 4px solid var(--accent); padding: 4px 0 4px 14px; font-size: 15px; display: grid; gap: 6px; }
+.exp b { color: var(--accent); }
+.score { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.score .big { font-family: var(--font-display); font-size: 48px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.score .pct { color: var(--muted); font-size: 15px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { color: var(--muted); font-weight: 700; font-size: 12px; letter-spacing: .06em; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; width: 72px; }
+td .mini { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; min-width: 80px; }
+td .mini i { display: block; height: 100%; background: var(--accent); }
+.review { display: grid; gap: 14px; }
+.rv { border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 8px; font-size: 15px; }
+.rv .q { font-weight: 700; }
+.rv .ans { display: grid; gap: 2px; font-size: 14px; }
+.rv .ans .ng { color: var(--ng); }
+.rv .ans .ok { color: var(--ok); }
+.note { font-size: 13px; color: var(--muted); }
+.tag { font-size: 12px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">理解度チェック</div>
+    <h1>障害福祉サービス確認テスト</h1>
+    <p>『図解でわかる障害福祉サービス』の主要テーマから80問。1問ごとに解説が出ます。</p>
+  </header>
+
+  <section class="card" id="start">
+    <h2>出題範囲を選ぶ</h2>
+    <div class="secs" id="secList"></div>
+    <div class="row">
+      <label class="opt"><input type="checkbox" id="shuffle"> 出題順をシャッフルする</label>
+      <label class="opt"><input type="checkbox" id="shuffleOpts"> 選択肢の順番も入れ替える</label>
+    </div>
+    <div class="row">
+      <button class="primary" id="startBtn">テストを始める</button>
+      <span class="best" id="best"></span>
+    </div>
+    <p class="note">数字や制度名は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。手元の版と異なる記述があれば、本の記載を優先して読み比べてください。</p>
+  </section>
+
+  <section class="card" id="quiz" hidden>
+    <div class="top"><span id="counter"></span><span id="secName"></span></div>
+    <div class="bar"><i id="prog"></i></div>
+    <p class="qtext"><span class="qtype" id="qtype"></span><span id="qtext"></span></p>
+    <div class="choices" id="choices"></div>
+    <div id="feedback" hidden>
+      <div class="verdict" id="verdict"></div>
+      <div class="exp" id="exp"></div>
+    </div>
+    <div class="row">
+      <button class="primary" id="nextBtn" hidden>次の問題へ</button>
+      <button id="quitBtn">中断して結果を見る</button>
+      <span class="note">キー操作: 1〜4で選択、Enterで次へ</span>
+    </div>
+  </section>
+
+  <section class="card" id="result" hidden>
+    <h2>結果</h2>
+    <div class="score"><span class="big" id="scoreNum"></span><span class="pct" id="scorePct"></span></div>
+    <p id="comment" style="margin:0"></p>
+    <h3>分野別の正答率</h3>
+    <div style="overflow-x:auto"><table><thead><tr><th>分野</th><th>正答</th><th></th></tr></thead><tbody id="secTable"></tbody></table></div>
+    <h3 id="reviewHead">間違えた問題の復習</h3>
+    <div class="review" id="review"></div>
+    <div class="row">
+      <button class="primary" id="retryWrong">間違えた問題だけやり直す</button>
+      <button id="restart">最初の画面に戻る</button>
+    </div>
+  </section>
+</div>
+
+<script>
+const SECTIONS = [
+  "制度の全体像",
+  "利用手続きと利用者負担",
+  "介護給付",
+  "訓練等給付",
+  "相談支援",
+  "障害児支援",
+  "関連制度と権利擁護",
+];
+const TF = ["○ 正しい", "× 誤り"];
+// s: section index, t: "mc" (4択) | "tf" (○×), o: options, a: index of correct option, e: 解説
+const Q = [
+  // ── 1 制度の全体像
+  {s:0,t:"mc",q:"障害者総合支援法の正式名称はどれか。",
+   o:["障害者の自立した生活を支援するための法律","障害者の日常生活及び社会生活を総合的に支援するための法律","障害者の福祉サービスの提供に関する法律","障害者の権利の擁護及び生活支援に関する法律"],a:1,
+   e:"2012年に障害者自立支援法を改正・改称して成立し、2013年4月に施行された。「自立」ではなく「日常生活及び社会生活を総合的に支援する」という名称に変わった点を押さえる。"},
+  {s:0,t:"mc",q:"障害者総合支援法の施行(2013年4月)にあわせて、新たに支援の対象に加えられたのはどれか。",
+   o:["発達障害者","難病等の患者","高次脳機能障害者","精神障害者"],a:1,
+   e:"難病等は総合支援法で初めて対象となり、対象疾病は段階的に拡大されている(2024年4月時点で369疾病)。発達障害は2010年の改正で精神障害に含まれることが明記され、高次脳機能障害も精神障害として扱われる。"},
+  {s:0,t:"mc",q:"3種類の障害者手帳のうち、法律に直接の根拠規定がなく、国の通知に基づいて都道府県・指定都市が交付しているものはどれか。",
+   o:["身体障害者手帳","療育手帳","精神障害者保健福祉手帳","すべて法律に根拠がある"],a:1,
+   e:"身体障害者手帳は身体障害者福祉法(1〜6級)、精神障害者保健福祉手帳は精神保健福祉法(1〜3級、有効期限2年)に根拠がある。療育手帳は1973年の厚生省通知が根拠で、自治体により名称(愛の手帳、みどりの手帳など)や区分(A・Bなど)が異なる。"},
+  {s:0,t:"tf",q:"障害福祉サービスを利用するには、必ず障害者手帳の交付を受けている必要がある。",o:TF,a:1,
+   e:"誤り。手帳は必須ではない。精神障害者は自立支援医療(精神通院医療)の受給者証や医師の診断書、難病患者は診断書などで障害者であることを確認できれば申請できる。障害児も同様に手帳は必須ではない。"},
+  {s:0,t:"mc",q:"次のうち、自立支援給付に含まれないものはどれか。",
+   o:["介護給付","訓練等給付","補装具費","移動支援"],a:3,
+   e:"自立支援給付は、介護給付・訓練等給付・相談支援(計画相談支援、地域相談支援)・自立支援医療・補装具費などで、全国共通の個別給付である。移動支援は市町村が地域の実情に応じて実施する地域生活支援事業に含まれる(意思疎通支援、日常生活用具の給付、地域活動支援センターなども同じ)。"},
+  {s:0,t:"mc",q:"65歳以上の障害者が介護保険の要介護認定を受けた場合、障害福祉サービスと介護保険サービスの関係として正しいものはどれか。",
+   o:["障害福祉サービスが優先して適用される","介護保険サービスが優先されるが、介護保険にないサービスは障害福祉サービスで利用できる","本人がどちらか自由に選択できる","同じ内容のサービスを両方から同時に利用できる"],a:1,
+   e:"総合支援法第7条の介護保険優先原則。ただし同行援護・行動援護・就労系サービスなど介護保険にないものは障害福祉サービスから支給され、支給量が不足する場合の上乗せも可能。2018年からは65歳到達前の5年間障害福祉サービスを利用していた人の介護保険利用者負担を軽減する仕組み(新高額障害福祉サービス等給付費)と、両制度の事業所を相互利用しやすくする共生型サービスが始まった。"},
+  {s:0,t:"mc",q:"ICF(国際生活機能分類)の構成要素に含まれないものはどれか。",
+   o:["心身機能・身体構造","活動","参加","能力障害"],a:3,
+   e:"ICF(2001年、WHO)は、生活機能(心身機能・身体構造、活動、参加)と背景因子(環境因子、個人因子)、健康状態が相互に影響し合うモデル。「能力障害」は前身のICIDH(1980年)の用語で、機能障害→能力障害→社会的不利という一方向のモデルだった。"},
+
+  {s:0,t:"mc",q:"障害者総合支援法の前身である障害者自立支援法が施行されたのはいつか。",
+   o:["2003年","2006年","2010年","2013年"],a:1,
+   e:"2006年4月に一部施行、同年10月に全面施行された。身体・知的・精神の三障害のサービスを一元化し、市町村を実施主体に統一した一方、原則1割の応益負担を導入して強い批判を受けた。2003年は支援費制度の開始、2013年は総合支援法の施行年。"},
+  {s:0,t:"tf",q:"2003年の支援費制度により、行政がサービスを決定する措置制度から、利用者が事業者を選んで契約する仕組みに変わった。",o:TF,a:0,
+   e:"正しい。利用者本位の契約制度への転換点だが、精神障害者は対象外で、サービス利用の急増により財源不足に陥り、3年で障害者自立支援法に移行した。"},
+  {s:0,t:"mc",q:"障害者総合支援法の基本理念として規定されていないものはどれか。",
+   o:["社会参加の機会の確保","どこで誰と生活するかについての選択の機会の確保","社会的障壁の除去","利用者の自己責任による費用負担"],a:3,
+   e:"第1条の2の基本理念は、基本的人権を享有する個人としての尊厳、社会参加の機会の確保、どこで誰と生活するかの選択の機会の確保と地域社会における共生、社会的障壁の除去を掲げている。障害者基本法の改正(2011年)と障害者権利条約の考え方を反映したもの。"},
+  {s:0,t:"mc",q:"市町村障害福祉計画・都道府県障害福祉計画は何年を1期として策定されるか。",
+   o:["1年","3年","5年","6年"],a:1,
+   e:"国の基本指針に即して3年を1期とし、サービスの必要量の見込みや確保の方策を定める。障害児福祉計画(児童福祉法)も2018年度から同じ周期で策定され、第7期は2024〜2026年度。"},
+  {s:0,t:"mc",q:"精神障害者保健福祉手帳の有効期限はどれか。",
+   o:["1年","2年","3年","無期限"],a:1,
+   e:"2年ごとに更新が必要で、等級は1〜3級。身体障害者手帳は原則として有効期限がない(状態の変化が見込まれる場合は再認定あり)。療育手帳は自治体ごとに再判定の時期を定めている。"},
+
+  // ── 2 利用手続きと利用者負担
+  {s:1,t:"mc",q:"障害福祉サービス(介護給付・訓練等給付)の利用申請はどこに行うか。",
+   o:["都道府県","市町村","児童相談所","指定相談支援事業者"],a:1,
+   e:"申請先は市町村(障害福祉担当課)。相談支援事業者は申請の相談や計画作成を担うが、支給決定を行うのは市町村である。"},
+  {s:1,t:"mc",q:"障害支援区分の認定で、コンピュータによる一次判定の後に二次判定を行うのはどこか。",
+   o:["市町村審査会","都道府県審査会","認定調査員","主治医"],a:0,
+   e:"流れは、申請→認定調査(80項目)+医師意見書→一次判定(コンピュータ)→二次判定(市町村審査会)→区分認定→サービス等利用計画案の提出→支給決定→受給者証の交付→事業者と契約→サービス等利用計画の確定→モニタリング。"},
+  {s:1,t:"mc",q:"障害支援区分の認定調査の項目数はいくつか。",
+   o:["56項目","74項目","80項目","106項目"],a:2,
+   e:"2014年4月に「障害程度区分」から「障害支援区分」に改められ、知的障害・精神障害の特性を反映できるよう調査項目は106項目から80項目に見直された。区分は非該当と区分1〜6で、6が最も支援の必要度が高い。有効期間は原則3年(3か月〜3年)。"},
+  {s:1,t:"mc",q:"次のうち、利用にあたって障害支援区分の認定が原則として不要なサービスはどれか。",
+   o:["居宅介護","生活介護","短期入所","就労継続支援B型"],a:3,
+   e:"訓練等給付(自立訓練、就労移行支援、就労継続支援A型・B型、就労定着支援、自立生活援助、共同生活援助)は区分認定が不要。介護給付は原則として区分認定が必要で、サービスごとに必要な区分が定められている(共同生活援助は介護を伴う場合、区分により報酬が変わる)。"},
+  {s:1,t:"mc",q:"サービス等利用計画を作成するのは、原則として誰か。",
+   o:["市町村の職員","指定特定相談支援事業者の相談支援専門員","事業所のサービス管理責任者","主治医"],a:1,
+   e:"2012年の法改正で、支給決定を受けるすべての利用者についてサービス等利用計画の作成が原則となった(2015年度までに段階的に実施)。本人や家族が作成するセルフプランも認められる。支給決定前に「計画案」を提出し、決定後に「計画」として確定し、定期的にモニタリングする。"},
+  {s:1,t:"mc",q:"障害福祉サービスの利用者負担の考え方として、現在の法律上の原則はどれか。",
+   o:["応益負担(サービス量に応じた1割の定率負担)","応能負担(家計の負担能力に応じた負担)","全額無料","全額自己負担"],a:1,
+   e:"障害者自立支援法では原則1割の定率負担(応益負担)が導入されて批判を受け、2010年の改正(2012年4月施行)で法律上も応能負担が原則となった。負担上限月額は、生活保護世帯0円、低所得(市町村民税非課税)0円、一般1は9,300円(障害児の通所・居宅は4,600円)、一般2は37,200円。"},
+  {s:1,t:"tf",q:"利用者負担上限月額を判定する「世帯」の範囲は、18歳以上の障害者の場合、本人と配偶者である。",o:TF,a:0,
+   e:"正しい。2008年7月から、18歳以上の障害者(施設に入所する18・19歳を除く)は本人と配偶者のみを世帯の範囲とする。障害児の場合は保護者の属する住民基本台帳上の世帯で判定する。"},
+  {s:1,t:"mc",q:"訓練等給付で行われる「暫定支給決定」の目的として正しいものはどれか。",
+   o:["利用者負担の上限額を仮に決める","一定期間サービスを利用して、本人の意向やサービスの適否を確認する","障害支援区分を仮に認定する","事業者の指定を仮に行う"],a:1,
+   e:"就労移行支援、自立訓練、就労継続支援A型などでは、原則2か月以内の暫定支給決定期間に実際に利用してもらい、継続利用の意思や効果を評価したうえで本支給決定を行う。"},
+
+  {s:1,t:"tf",q:"市町村審査会の委員は、障害者等の保健または福祉に関する学識経験を有する者のうちから市町村長が任命する。",o:TF,a:0,
+   e:"正しい。市町村審査会は障害支援区分の二次判定や支給決定に関する意見を述べる機関で、医療・福祉の専門家などで構成される。複数の市町村が共同で設置することもできる。"},
+  {s:1,t:"mc",q:"市町村が支給決定を行う際の勘案事項に含まれないものはどれか。",
+   o:["介護を行う者の状況","障害者の置かれている環境","サービス利用に関する本人の意向","事業者の経営状況"],a:3,
+   e:"勘案事項は、障害支援区分、介護者の状況、置かれている環境(住まいや就労の状況など)、介護給付費等の受給状況、保健医療サービスの利用状況、サービス利用の意向、サービス等利用計画案など。市町村はこれらを踏まえてサービスの種類と支給量を決める。"},
+  {s:1,t:"mc",q:"市町村の支給決定に不服がある場合、審査請求を行う相手はどこか。",
+   o:["市町村長","都道府県知事","厚生労働大臣","家庭裁判所"],a:1,
+   e:"介護給付費等に関する処分に不服がある場合は都道府県知事に審査請求できる。都道府県は障害者介護給付費等不服審査会を設置して審査を行う。"},
+  {s:1,t:"tf",q:"同じ世帯で障害福祉サービス、介護保険サービス、補装具、障害児通所支援などの利用者負担を合算し、基準額を超えた分は高額障害福祉サービス等給付費として支給される。",o:TF,a:0,
+   e:"正しい。複数のサービスを利用する世帯の負担を軽減する仕組み。障害児が通所支援と障害福祉サービスなどを併用する場合も合算の対象になる。"},
+  {s:1,t:"tf",q:"入所施設やグループホームの食費・光熱水費は給付の対象外で実費負担だが、低所得者には補足給付による軽減がある。",o:TF,a:0,
+   e:"正しい。補足給付(特定障害者特別給付費)として、施設入所者には食費・光熱水費の負担軽減、グループホームの入居者には家賃助成(月額1万円を上限)が行われる。"},
+
+  // ── 3 介護給付
+  {s:2,t:"mc",q:"居宅介護(ホームヘルプ)のサービス内容に含まれないものはどれか。",
+   o:["入浴・排せつ・食事などの身体介護","調理・洗濯・掃除などの家事援助","通院等介助","外出時の移動中に代筆・代読などの視覚的情報を提供する支援"],a:3,
+   e:"居宅介護は身体介護・家事援助・通院等介助・通院等乗降介助を行う。視覚障害者の外出時に移動の援護や代筆・代読などの情報提供を行うのは同行援護。居宅介護の対象は区分1以上(身体介護を伴う通院等介助は区分2以上)。"},
+  {s:2,t:"mc",q:"重度訪問介護を利用できるのは、障害支援区分がいくつ以上の人か。",
+   o:["区分2以上","区分3以上","区分4以上","区分6のみ"],a:2,
+   e:"重度の肢体不自由者、または重度の知的障害・精神障害により行動上著しい困難がある人(2014年4月から対象拡大)で、常時介護を要する区分4以上の人が対象。長時間にわたる見守りを含めた総合的な支援を行う点が居宅介護と異なる。2018年4月からは区分6の利用者は入院中の病院内でも利用できる。"},
+  {s:2,t:"mc",q:"視覚障害により移動に著しい困難がある人の外出を支援するサービスはどれか。",
+   o:["居宅介護","同行援護","行動援護","移動支援"],a:1,
+   e:"同行援護は2011年に創設され、移動の援護、排せつ・食事の介護、代筆・代読などの情報提供を行う。障害支援区分の認定は不要(身体介護を伴う場合は区分2以上)。行動援護は知的障害・精神障害で行動上著しい困難がある人(区分3以上、行動関連項目10点以上)が対象。移動支援は地域生活支援事業。"},
+  {s:2,t:"mc",q:"重度障害者等包括支援の対象となる障害支援区分はどれか。",
+   o:["区分3以上","区分4以上","区分5以上","区分6"],a:3,
+   e:"常時介護を要し、意思疎通を図ることに著しい支障がある区分6の人(四肢麻痺で寝たきりのALS患者など、重症心身障害者、強度行動障害のある人)に、居宅介護や短期入所など複数のサービスを包括的に提供する。"},
+  {s:2,t:"mc",q:"療養介護が提供される場所はどこか。",
+   o:["障害者支援施設","病院などの医療機関","本人の居宅","共同生活援助の住居"],a:1,
+   e:"医療と常時の介護を必要とする人に、主に昼間、病院で機能訓練、療養上の管理、看護、介護を行う。対象は、ALSなどで気管切開を伴う人工呼吸器による呼吸管理を行っている区分6の人、筋ジストロフィーや重症心身障害で区分5以上の人など。医療部分は療養介護医療費として給付される。"},
+  {s:2,t:"mc",q:"生活介護の利用対象となる障害支援区分として正しいものはどれか。",
+   o:["区分1以上","区分2以上(50歳以上は区分1以上)","区分3以上(50歳以上は区分2以上)","区分4以上(50歳以上は区分3以上)"],a:2,
+   e:"生活介護は、常時介護を要する人に主として昼間、入浴・排せつ・食事の介護と、創作的活動や生産活動の機会を提供する。区分3以上(50歳以上は区分2以上)が対象で、施設入所支援を併せて利用する場合は区分4以上(50歳以上は区分3以上)が必要。"},
+  {s:2,t:"tf",q:"短期入所(ショートステイ)は、介護者の疾病などの理由で障害者支援施設等に短期間入所して受けるサービスで、福祉型と医療型がある。",o:TF,a:0,
+   e:"正しい。福祉型は障害者支援施設などで、医療型は病院・診療所などで医療的ケアが必要な人を受け入れる。対象は区分1以上(障害児は相当する支援の度合い)。介護者のレスパイト(休息)の目的でも利用できる。"},
+  {s:2,t:"mc",q:"施設入所支援が主として提供される時間帯はいつか。",
+   o:["主として昼間","主として夜間","24時間すべて","外出時"],a:1,
+   e:"施設入所支援は、施設に入所する人に夜間や休日に入浴・排せつ・食事の介護などを行う。昼間は生活介護などの日中活動系サービスと組み合わせて利用する「昼夜分離」の考え方。対象は、生活介護を受ける区分4以上(50歳以上は区分3以上)の人や、自立訓練・就労移行支援の利用者で通所が困難な人など。"},
+
+  {s:2,t:"tf",q:"居宅介護の通院等乗降介助は、ヘルパーが自ら運転する車両で通院などをする際に、乗降や移動の介助を行うものである。",o:TF,a:0,
+   e:"正しい。乗車前・降車後の屋内外の移動介助や、通院先での受診手続きの介助も含む。運転そのものは介護報酬の対象ではない。"},
+  {s:2,t:"mc",q:"行動援護の対象要件は、障害支援区分3以上であることに加えて、認定調査の行動関連項目の合計点数が何点以上であることか。",
+   o:["5点以上","8点以上","10点以上","12点以上"],a:2,
+   e:"行動関連項目(12項目、各0〜2点)の合計が10点以上であることが要件。障害児の場合はこれに相当する支援の度合いが必要。行動援護では、行動する際に生じる危険の回避のための援護、外出時の移動中の介護、予防的対応などを行う。"},
+  {s:2,t:"tf",q:"重度訪問介護では、居宅での介護だけでなく、外出時の移動中の介護も提供できる。",o:TF,a:0,
+   e:"正しい。居宅における入浴・排せつ・食事などの介護、家事、生活等に関する相談・助言、外出時の移動中の介護を総合的に行う。長時間の見守りを含む点が居宅介護との大きな違い。"},
+  {s:2,t:"mc",q:"障害者総合支援法上の「障害者支援施設」が行うサービスの組み合わせとして正しいものはどれか。",
+   o:["施設入所支援のみ","施設入所支援と、昼間の生活介護・自立訓練・就労移行支援など","共同生活援助と短期入所","療養介護のみ"],a:1,
+   e:"障害者支援施設は、夜間の施設入所支援と昼間の日中活動系サービス(生活介護、自立訓練、就労移行支援など)を併せて行う施設。かつての更生施設・授産施設などの体系は、2006年の障害者自立支援法で日中活動と居住支援に分けて再編された。"},
+
+  // ── 4 訓練等給付
+  {s:3,t:"mc",q:"自立訓練(機能訓練)の標準利用期間はどれか。",
+   o:["1年","1年6か月","2年","3年"],a:1,
+   e:"機能訓練(身体障害者・難病患者が対象)は1年6か月(頸髄損傷による四肢麻痺などは3年)。生活訓練(知的障害者・精神障害者が対象)は2年(長期入院・入所していた人は3年)。居住の場を提供しながら生活訓練を行う宿泊型自立訓練もある。"},
+  {s:3,t:"mc",q:"就労移行支援の対象年齢と標準利用期間の組み合わせとして正しいものはどれか。",
+   o:["18歳以上で年齢上限なし・1年","65歳未満・2年","65歳未満・3年","50歳未満・2年"],a:1,
+   e:"一般就労を希望し、知識や能力の向上により就労が見込まれる65歳未満の人が対象(2018年からは65歳以上でも一定の要件を満たせば利用可)。標準利用期間は2年で、必要と認められれば最大1年延長できる。"},
+  {s:3,t:"mc",q:"事業所と雇用契約を結んだうえで就労の機会を提供するサービスはどれか。",
+   o:["就労移行支援","就労継続支援A型","就労継続支援B型","就労定着支援"],a:1,
+   e:"A型は雇用型で最低賃金が適用され、原則65歳未満が対象。B型は雇用契約を結ばず工賃を支払う非雇用型で、年齢制限がない。B型の対象は、就労経験があり年齢や体力の面で一般企業に雇用されることが困難な人、50歳以上の人、障害基礎年金1級受給者、就労移行支援のアセスメントでB型が適当と判断された人など。"},
+  {s:3,t:"mc",q:"就労定着支援の利用期間は最大でどれくらいか。",
+   o:["6か月","1年","2年","3年"],a:3,
+   e:"2018年創設。就労移行支援などを利用して一般就労した人に、就労後6か月を経過した時点から最大3年間、職場・家族・関係機関との連絡調整や生活面の課題への対応を行う。就労後6か月間は就労移行支援事業所などが定着支援を担う。"},
+  {s:3,t:"tf",q:"自立生活援助は、障害者支援施設やグループホームなどから一人暮らしに移行した人に対し、定期的な巡回訪問や随時の対応を行うサービスで、標準利用期間は1年である。",o:TF,a:0,
+   e:"正しい。2018年創設。標準利用期間は1年で、市町村審査会の個別審査を経て延長できる。2024年4月の改正で、一人暮らしへの移行を希望する人なども対象に含まれるよう拡大された。"},
+  {s:3,t:"mc",q:"共同生活援助(グループホーム)の類型に含まれないものはどれか。",
+   o:["介護サービス包括型","外部サービス利用型","日中サービス支援型","施設入所型"],a:3,
+   e:"介護サービス包括型は事業所の職員が介護を行い、外部サービス利用型は介護を居宅介護事業者に委託する。日中サービス支援型(2018年創設)は常時の支援体制を確保し日中も支援を行う類型で、短期入所の併設が必須。2024年4月の改正で、一人暮らし等を希望する入居者への支援(退居後の相談など)が支援内容に含まれることが明確化された。"},
+  {s:3,t:"mc",q:"2025年10月に創設された、本人の希望や能力に合った働き方の選択を支援するために就労アセスメントを行うサービスはどれか。",
+   o:["就労移行支援","就労定着支援","就労選択支援","就労継続支援"],a:2,
+   e:"2022年成立の改正法で創設され、2025年10月1日施行。就労系サービスの利用前や利用中に、作業場面などを活用して本人の強みや課題を整理し、適切な選択を支援する。就労継続支援B型を新たに利用する人は原則として利用が必要で、A型と就労移行支援の新規利用者は2027年4月から原則利用となる。"},
+  {s:3,t:"tf",q:"宿泊型自立訓練は、自立訓練(生活訓練)の一類型で、居室などの設備を利用させながら生活能力向上のための訓練を行うサービスである。",o:TF,a:0,
+   e:"正しい。知的障害・精神障害のある人で、日中は一般就労や他の障害福祉サービスを利用している人などに、夜間の居住の場を提供しながら家事や生活リズムなどの訓練を行う。"},
+
+  {s:3,t:"tf",q:"就労継続支援B型では、利用者に最低賃金が適用される。",o:TF,a:1,
+   e:"誤り。B型は雇用契約を結ばない非雇用型で、生産活動の収益から「工賃」を支払う。最低賃金が適用されるのは雇用契約を結ぶA型。B型には標準利用期間や年齢の上限もない。"},
+  {s:3,t:"tf",q:"共同生活援助(グループホーム)は、障害支援区分が非該当の人でも利用できる。",o:TF,a:0,
+   e:"正しい。共同生活援助は訓練等給付で、区分にかかわらず利用できる(区分1以上の人は介護サービス包括型などで介護を受けられる)。ただし身体障害者は、65歳未満か、65歳になる前に障害福祉サービスを利用していた人に限られる。"},
+  {s:3,t:"mc",q:"就労継続支援A型は、原則として何歳未満の人が対象か。",
+   o:["50歳未満","60歳未満","65歳未満","年齢制限はない"],a:2,
+   e:"A型は雇用契約に基づく就労であるため原則65歳未満が対象(2018年からは65歳以上でも一定の要件を満たせば利用可)。対象は、就労移行支援を利用したが雇用に結びつかなかった人、特別支援学校を卒業して就職できなかった人、就労経験はあるが現在雇用されていない人など。"},
+  {s:3,t:"mc",q:"自立訓練(生活訓練)の主な対象として正しいものはどれか。",
+   o:["身体障害者","難病患者","知的障害者・精神障害者","障害児"],a:2,
+   e:"生活訓練は知的障害者・精神障害者に、食事や家事などの生活能力の維持・向上のための訓練や相談を行う(標準2年、長期入院・入所者は3年)。身体障害者・難病患者に理学療法・作業療法などのリハビリを行うのは機能訓練(標準1年6か月)。"},
+
+  // ── 5 相談支援
+  {s:4,t:"mc",q:"計画相談支援を行う「指定特定相談支援事業者」を指定するのはどこか。",
+   o:["都道府県","市町村","国","都道府県と市町村の両方"],a:1,
+   e:"指定特定相談支援事業者(計画相談支援+基本相談支援)と指定障害児相談支援事業者は市町村が指定する。地域相談支援を行う指定一般相談支援事業者(地域相談支援+基本相談支援)は都道府県が指定する。"},
+  {s:4,t:"mc",q:"地域相談支援を構成する2つのサービスの組み合わせとして正しいものはどれか。",
+   o:["サービス利用支援と継続サービス利用支援","地域移行支援と地域定着支援","基本相談支援と計画相談支援","地域活動支援と自立生活援助"],a:1,
+   e:"地域移行支援は、障害者支援施設・精神科病院・保護施設・矯正施設などからの退所・退院に向けた相談、住居の確保、外出への同行などを行う。地域定着支援は、単身などで生活する人に常時の連絡体制を確保し、緊急時の訪問や相談に対応する。サービス利用支援と継続サービス利用支援(モニタリング)は計画相談支援の内容。"},
+  {s:4,t:"tf",q:"2024年4月の法改正で、市町村には基幹相談支援センターの設置が義務づけられた。",o:TF,a:1,
+   e:"誤り。設置は「努力義務」とされた。基幹相談支援センターは地域の相談支援の中核として、総合的・専門的な相談、地域の相談支援体制の強化、地域移行・地域定着の促進、権利擁護・虐待防止などを担う。"},
+  {s:4,t:"mc",q:"協議会(自立支援協議会)の役割として適切でないものはどれか。",
+   o:["地域の関係機関によるネットワークの構築","個別事例の検討を通じた地域課題の共有","障害支援区分の二次判定","地域のサービス基盤の整備に向けた協議"],a:2,
+   e:"二次判定は市町村審査会の役割。協議会は、相談支援事業者・サービス事業者・医療・教育・雇用などの関係機関が集まり、地域の課題を協議する場。2024年4月の改正で、個別事例の検討を通じた地域課題の把握、関係機関に対する情報提供の求め、構成員の守秘義務が法律上明確化された。"},
+  {s:4,t:"tf",q:"相談支援専門員になるには、一定の実務経験に加えて相談支援従事者初任者研修の修了が必要で、その後は5年ごとに現任研修を受ける必要がある。",o:TF,a:0,
+   e:"正しい。実務経験は保有資格などにより3〜10年と異なる。2020年度からは地域の人材育成や困難事例の対応を担う主任相談支援専門員の研修も始まった。"},
+
+  {s:4,t:"tf",q:"基本相談支援は計画相談支援と地域相談支援に共通する基盤であり、指定特定相談支援事業者・指定一般相談支援事業者のいずれも基本相談支援を行う必要がある。",o:TF,a:0,
+   e:"正しい。基本相談支援は、障害者やその家族からの相談に応じて情報提供や助言を行い、事業者や市町村との連絡調整を行うもの。これを基盤に、特定相談支援事業者は計画相談支援を、一般相談支援事業者は地域相談支援を上乗せして行う。"},
+  {s:4,t:"mc",q:"地域定着支援の内容として正しいものはどれか。",
+   o:["住居の確保や退院に向けた同行支援","常時の連絡体制の確保と、緊急時の訪問・相談対応","サービス等利用計画の作成とモニタリング","就労先の開拓と職場への定着支援"],a:1,
+   e:"地域定着支援は、施設や病院から地域に移行した人、家族との同居から一人暮らしに移行した人などで地域生活が不安定な人に、24時間の連絡体制を確保し、緊急時に訪問や相談を行う。住居確保や退院に向けた支援は地域移行支援の内容。"},
+  {s:4,t:"tf",q:"地域移行支援の対象には、障害者支援施設や精神科病院のほか、保護施設や矯正施設等に入所している障害者も含まれる。",o:TF,a:0,
+   e:"正しい。2014年4月から、救護施設などの保護施設、刑務所や少年院などの矯正施設、更生保護施設に入所している障害者も対象に加えられた。退所後の住居確保、関係機関との調整、外出の同行、体験利用などを支援する。"},
+  {s:4,t:"tf",q:"障害者やその家族からの一般的な相談に応じる「障害者相談支援事業」は、地域生活支援事業の市町村必須事業である。",o:TF,a:0,
+   e:"正しい。市町村は相談支援事業を必ず実施し、指定相談支援事業者に委託することもできる(委託相談支援事業所)。市町村の相談支援事業、基幹相談支援センター、指定相談支援事業者の計画相談支援が重層的に地域の相談体制を支える。"},
+
+  // ── 6 障害児支援
+  {s:5,t:"mc",q:"児童発達支援や放課後等デイサービスなどの障害児通所支援の根拠となる法律はどれか。",
+   o:["障害者総合支援法","児童福祉法","発達障害者支援法","障害者基本法"],a:1,
+   e:"2012年の改正で障害児支援は児童福祉法に一本化され、通所支援は市町村、入所支援は都道府県が実施主体となった。ただし18歳未満の障害児が居宅介護や短期入所などを利用する場合は、障害者総合支援法のサービスを使う。"},
+  {s:5,t:"mc",q:"放課後等デイサービスの対象として正しいものはどれか。",
+   o:["未就学の障害児","就学している障害児(原則18歳まで)","18歳以上の障害者","0〜2歳の乳幼児"],a:1,
+   e:"授業の終了後や休校日に、生活能力向上のための訓練や社会との交流の促進などを行う。原則18歳までだが、継続の必要があれば20歳まで利用できる。未就学児は児童発達支援の対象。"},
+  {s:5,t:"mc",q:"障害児入所支援の利用決定(給付決定)を行う機関はどれか。",
+   o:["市町村","都道府県(児童相談所)","学校","保健所"],a:1,
+   e:"障害児入所支援(福祉型・医療型)は都道府県が実施主体で、児童相談所が窓口となる。通所支援の支給決定は市町村。2024年4月の改正では、18歳を超えて入所を続ける人の移行支援のため、22歳まで入所を継続できる措置が法定化された。"},
+  {s:5,t:"tf",q:"2024年4月から、福祉型と医療型に分かれていた児童発達支援(児童発達支援センターを含む)は一元化された。",o:TF,a:0,
+   e:"正しい。肢体不自由児を対象とした医療型児童発達支援は児童発達支援に統合され、どの障害でも身近な事業所を利用できるようになった。同時に、児童発達支援センターが地域の中核的役割(専門的支援、インクルージョンの推進、地域の事業所への助言など)を担うことも明確化された。このほか、保育所等訪問支援、居宅訪問型児童発達支援(2018年創設)がある。"},
+  {s:5,t:"tf",q:"障害児が通所支援を利用する際は、障害者と同様に障害支援区分の認定を受ける必要がある。",o:TF,a:1,
+   e:"誤り。障害児には障害支援区分の認定は行われず、5領域11項目の調査で支援の必要度を確認する。利用にあたっては指定障害児相談支援事業者が障害児支援利用計画を作成する(セルフプランも可)。手帳も必須ではなく、医師の診断書などで利用できる。"},
+
+  {s:5,t:"tf",q:"児童発達支援は、主に就学前の障害児に対して、日常生活の基本的動作の指導や集団生活への適応訓練などを行うサービスである。",o:TF,a:0,
+   e:"正しい。児童発達支援は未就学の障害児が対象で、児童発達支援センターと児童発達支援事業所が提供する。就学後は放課後等デイサービスに移る。"},
+  {s:5,t:"mc",q:"保育所や学校などを訪問し、障害児本人や施設の職員に対して集団生活に適応するための専門的な支援を行うサービスはどれか。",
+   o:["児童発達支援","居宅訪問型児童発達支援","保育所等訪問支援","放課後等デイサービス"],a:2,
+   e:"保育所等訪問支援は、保育所・幼稚園・小学校・放課後児童クラブなどに通う障害児の集団生活への適応を支援する。2018年からは乳児院や児童養護施設に入所する障害児も対象に加わった。"},
+  {s:5,t:"tf",q:"居宅訪問型児童発達支援は、重度の障害などで外出が著しく困難な障害児の居宅を訪問して発達支援を行うサービスで、2018年に創設された。",o:TF,a:0,
+   e:"正しい。人工呼吸器を装着しているなど医療的ケアが必要で通所が難しい障害児などが対象。訪問支援員が日常生活の基本的動作の指導や知識技能の付与などを行う。"},
+  {s:5,t:"tf",q:"2019年10月から、3歳から5歳までの障害児の児童発達支援などの利用者負担は無償化された。",o:TF,a:0,
+   e:"正しい。幼児教育・保育の無償化にあわせて、満3歳になって初めての4月1日から小学校入学までの3年間、児童発達支援・医療型児童発達支援(現在は一元化)・居宅訪問型児童発達支援・保育所等訪問支援・障害児入所支援の利用者負担が無償になった。"},
+
+  // ── 7 関連制度と権利擁護
+  {s:6,t:"mc",q:"自立支援医療の3種類に含まれないものはどれか。",
+   o:["更生医療","育成医療","精神通院医療","重度心身障害者医療"],a:3,
+   e:"更生医療は18歳以上の身体障害者、育成医療は18歳未満の身体に障害のある児童が対象で、いずれも市町村が実施。精神通院医療は都道府県・指定都市が実施する。自己負担は原則1割で、所得に応じた上限がある。重度心身障害者医療費助成は自治体独自の制度。"},
+  {s:6,t:"tf",q:"補装具費の支給には、購入と修理に加えて、2018年4月から「借受け」が追加された。",o:TF,a:0,
+   e:"正しい。成長に伴い短期間で交換が必要な障害児などを想定して借受けが加わった。補装具は義肢・装具・車いす・補聴器・白杖・座位保持装置など身体機能を補完・代替するもので、市町村が支給し自己負担は原則1割(上限37,200円)。一方、特殊寝台やストマ装具などの日常生活用具は地域生活支援事業で給付される。"},
+  {s:6,t:"mc",q:"障害者虐待防止法が定める虐待の類型に含まれないものはどれか。",
+   o:["身体的虐待","心理的虐待","経済的虐待","社会的虐待"],a:3,
+   e:"類型は、身体的虐待・性的虐待・心理的虐待・放棄や放置(ネグレクト)・経済的虐待の5つ。養護者、障害者福祉施設従事者等、使用者による虐待を対象とし、発見した人には通報義務がある。通報先は市町村(市町村障害者虐待防止センター)で、使用者による虐待は都道府県(都道府県障害者権利擁護センター)にも通報できる。学校・病院・保育所は通報義務の対象外で、防止措置の義務のみがある。2012年10月施行。"},
+  {s:6,t:"mc",q:"障害者差別解消法の改正により、2024年4月から民間事業者に義務づけられたものはどれか。",
+   o:["不当な差別的取扱いの禁止","合理的配慮の提供","障害者の雇用","バリアフリー設備の設置"],a:1,
+   e:"2016年施行の同法では、不当な差別的取扱いは当初から行政機関・事業者ともに禁止。合理的配慮の提供は行政機関が義務、事業者は努力義務だったが、2021年の改正(2024年4月施行)で事業者も義務となった。"},
+  {s:6,t:"tf",q:"障害者雇用促進法の法定雇用率の算定基礎に精神障害者が加えられたのは、2018年4月からである。",o:TF,a:0,
+   e:"正しい。算定基礎には身体障害者(1976年)、知的障害者(1998年)に続いて精神障害者が2018年に加わった。民間企業の法定雇用率は2024年4月に2.5%、2026年7月に2.7%へと段階的に引き上げられている。"},
+  {s:6,t:"mc",q:"障害基礎年金の等級として正しいものはどれか。",
+   o:["1級のみ","1級・2級","1級〜3級","1級〜6級"],a:1,
+   e:"障害基礎年金は1級・2級、障害厚生年金は1級〜3級(3級より軽い場合は一時金の障害手当金)。20歳前に初診日がある場合は20歳から障害基礎年金を受けられる(所得制限あり)。年金の等級と障害者手帳の等級は別の基準で判定される。"},
+  {s:6,t:"mc",q:"成年後見制度の法定後見の3類型として正しいものはどれか。",
+   o:["後見・保佐・補助","後見・監督・代理","任意・法定・特別","補助・支援・代行"],a:0,
+   e:"判断能力を欠く常況にある人は後見、著しく不十分な人は保佐、不十分な人は補助の対象。本人があらかじめ後見人を決めておく任意後見制度もある。申立て費用や後見人報酬の助成を行う成年後見制度利用支援事業は、地域生活支援事業の市町村必須事業。"},
+  {s:6,t:"mc",q:"2011年の障害者基本法改正で、障害者の定義に新たに加えられた概念はどれか。",
+   o:["医学モデル","社会的障壁","能力障害","要介護状態"],a:1,
+   e:"「障害及び社会的障壁により継続的に日常生活又は社会生活に相当な制限を受ける状態」と定義され、障害を個人の心身の問題だけでなく社会の側の障壁との関係でとらえる社会モデルの考え方が反映された。障害者権利条約(日本は2014年批准)への対応の一環。"},
+  {s:6,t:"tf",q:"2024年4月の法改正により、市町村には地域生活支援拠点等の整備が努力義務とされた。",o:TF,a:0,
+   e:"正しい。地域生活支援拠点等は、緊急時の受け入れ・対応、体験の機会・場の提供、相談、専門的人材の確保・養成、地域の体制づくりの5つの機能をもち、親亡き後も見据えた地域での居住支援の仕組みとして整備が進められている。"},
+  {s:6,t:"mc",q:"特殊寝台、入浴補助用具、ストマ装具などの日常生活用具の給付を行うのはどの制度か。",
+   o:["補装具費支給制度","自立支援医療","地域生活支援事業","介護給付"],a:2,
+   e:"日常生活用具給付等事業は地域生活支援事業の市町村必須事業で、品目や基準額、利用者負担は市町村が定める。身体機能を補完・代替する義肢・車いす・補聴器などは自立支援給付の補装具費で対応する点と区別する。"},
+  {s:6,t:"tf",q:"特別障害者手当は、20歳以上で著しく重度の障害があり、日常生活において常時特別の介護を必要とする在宅の人に支給される。",o:TF,a:0,
+   e:"正しい。施設入所者や3か月を超えて入院している人は対象外で、所得制限がある。20歳未満の重度障害児には障害児福祉手当、その保護者には特別児童扶養手当がある。"},
+  {s:6,t:"mc",q:"日本が障害者権利条約を批准したのはいつか。",
+   o:["2006年","2011年","2014年","2016年"],a:2,
+   e:"2006年に国連総会で採択、日本は2007年に署名した。障害者基本法の改正(2011年)、障害者総合支援法(2012年成立)、障害者差別解消法(2013年成立)など国内法を整備したうえで、2014年1月に批准した。2022年には国連の権利委員会から初の総括所見が出され、脱施設化やインクルーシブ教育の推進が勧告された。"},
+  {s:6,t:"mc",q:"判断能力が不十分な人に、福祉サービスの利用援助や日常的な金銭管理などを行う事業で、社会福祉協議会が実施しているものはどれか。",
+   o:["成年後見制度","日常生活自立支援事業","生活困窮者自立支援事業","地域定着支援"],a:1,
+   e:"日常生活自立支援事業は都道府県・指定都市社会福祉協議会が実施主体(窓口は市町村社協)で、契約能力はあるが判断能力が不十分な認知症高齢者・知的障害者・精神障害者が対象。契約能力を欠くほど判断能力が低下している場合は成年後見制度の対象になる。"},
+];
+
+const $ = (id) => document.getElementById(id);
+const KEYS = ["1","2","3","4"];
+const QV = 2; // bump when questions are added or reordered, so a stale in-page snapshot is not restored
+let state = { v: QV, screen: "start", order: [], idx: 0, answers: {}, optOrder: {}, shuffleOpts: false };
+
+function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+function load(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+
+function renderStart() {
+  const list = $("secList"); list.innerHTML = "";
+  SECTIONS.forEach((name, i) => {
+    const n = Q.filter(q => q.s === i).length;
+    const l = document.createElement("label"); l.className = "sec";
+    l.innerHTML = `<input type="checkbox" id="sec${i}" checked> <span>${name}</span><span class="n">${n}問</span>`;
+    list.appendChild(l);
+  });
+  const b = load("best");
+  $("best").textContent = b ? `これまでの最高: ${b.c} / ${b.n} 問 (${b.d})` : "";
+}
+
+function start(ids) {
+  state.answers = {}; state.optOrder = {}; state.idx = 0;
+  state.shuffleOpts = $("shuffleOpts").checked;
+  state.order = $("shuffle").checked ? shuffle(ids) : ids;
+  state.order.forEach(i => {
+    const q = Q[i];
+    state.optOrder[i] = (state.shuffleOpts && q.t === "mc") ? shuffle([0,1,2,3]) : q.o.map((_, k) => k);
+  });
+  state.screen = "quiz"; show();
+}
+
+function show() {
+  $("start").hidden = state.screen !== "start";
+  $("quiz").hidden = state.screen !== "quiz";
+  $("result").hidden = state.screen !== "result";
+  if (state.screen === "quiz") renderQ();
+  if (state.screen === "result") renderResult();
+  window.scrollTo({ top: 0 });
+}
+
+function renderQ() {
+  const qi = state.order[state.idx]; const q = Q[qi];
+  const answered = state.answers[qi] !== undefined;
+  $("counter").textContent = `第${state.idx + 1}問 / ${state.order.length}問`;
+  $("secName").textContent = SECTIONS[q.s];
+  $("prog").style.width = `${(state.idx / state.order.length) * 100}%`;
+  $("qtype").textContent = q.t === "tf" ? "○×" : "4択";
+  $("qtext").textContent = q.q;
+  const box = $("choices"); box.innerHTML = "";
+  state.optOrder[qi].forEach((oi, pos) => {
+    const b = document.createElement("button"); b.className = "choice"; b.type = "button";
+    b.innerHTML = `<span class="k">${q.t === "tf" ? "" : KEYS[pos]}</span><span>${q.o[oi]}</span>`;
+    b.disabled = answered;
+    if (answered) { if (oi === q.a) b.classList.add("correct"); else if (oi === state.answers[qi]) b.classList.add("wrong"); }
+    b.addEventListener("click", () => answer(oi));
+    box.appendChild(b);
+  });
+  $("feedback").hidden = !answered;
+  $("nextBtn").hidden = !answered;
+  if (answered) fillFeedback(q, state.answers[qi]);
+  $("nextBtn").textContent = state.idx === state.order.length - 1 ? "結果を見る" : "次の問題へ";
+}
+
+function fillFeedback(q, chosen) {
+  const ok = chosen === q.a;
+  const v = $("verdict"); v.textContent = ok ? "正解" : "不正解"; v.className = "verdict " + (ok ? "ok" : "ng");
+  $("exp").innerHTML = `<div><b>正答:</b> ${q.o[q.a]}</div><div>${q.e}</div>`;
+}
+
+function answer(oi) {
+  const qi = state.order[state.idx];
+  if (state.answers[qi] !== undefined) return;
+  state.answers[qi] = oi; renderQ();
+  $("nextBtn").focus();
+}
+
+function next() {
+  if (state.idx < state.order.length - 1) { state.idx++; renderQ(); window.scrollTo({ top: 0 }); }
+  else finish();
+}
+
+function finish() {
+  state.screen = "result"; show();
+}
+
+function renderResult() {
+  const done = state.order.filter(i => state.answers[i] !== undefined);
+  const correct = done.filter(i => state.answers[i] === Q[i].a);
+  const n = done.length, c = correct.length;
+  $("scoreNum").textContent = `${c} / ${n}`;
+  const pct = n ? Math.round((c / n) * 100) : 0;
+  $("scorePct").textContent = `正答率 ${pct}%` + (n < state.order.length ? `(${state.order.length}問中${n}問に回答)` : "");
+  $("comment").textContent = pct >= 90 ? "制度の全体像から細かな要件まで、しっかり理解できています。" : pct >= 70 ? "主要な仕組みは押さえられています。間違えた分野を本で読み直すと定着します。" : pct >= 50 ? "基本は理解できていますが、サービスごとの対象や数字の違いが曖昧なようです。分野別の正答率を見て弱い章から復習しましょう。" : "まずは制度の全体像と利用手続きの章から読み直し、サービスの分類(介護給付・訓練等給付・相談支援・障害児支援)を整理すると得点が伸びます。";
+  const tb = $("secTable"); tb.innerHTML = "";
+  SECTIONS.forEach((name, s) => {
+    const ids = done.filter(i => Q[i].s === s); if (!ids.length) return;
+    const cc = ids.filter(i => state.answers[i] === Q[i].a).length;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${name}</td><td class="num">${cc} / ${ids.length}</td><td><div class="mini"><i style="width:${Math.round(cc / ids.length * 100)}%"></i></div></td>`;
+    tb.appendChild(tr);
+  });
+  const wrong = done.filter(i => state.answers[i] !== Q[i].a);
+  const rv = $("review"); rv.innerHTML = "";
+  $("reviewHead").textContent = wrong.length ? `間違えた問題の復習(${wrong.length}問)` : "間違えた問題はありません";
+  wrong.forEach(i => {
+    const q = Q[i]; const d = document.createElement("div"); d.className = "rv";
+    d.innerHTML = `<div class="tag">${SECTIONS[q.s]}</div><div class="q">${q.q}</div><div class="ans"><span class="ng">あなたの回答: ${q.o[state.answers[i]]}</span><span class="ok">正答: ${q.o[q.a]}</span></div><div>${q.e}</div>`;
+    rv.appendChild(d);
+  });
+  $("retryWrong").hidden = !wrong.length;
+  if (n === state.order.length) {
+    const b = load("best");
+    if (!b || c / n > b.c / b.n) store("best", { c, n, d: new Date().toLocaleDateString("ja-JP") });
+  }
+  state.wrong = wrong;
+}
+
+$("startBtn").addEventListener("click", () => {
+  const secs = SECTIONS.map((_, i) => $("sec" + i).checked);
+  const ids = Q.map((q, i) => secs[q.s] ? i : -1).filter(i => i >= 0);
+  if (!ids.length) { $("best").textContent = "分野を1つ以上選んでください。"; return; }
+  start(ids);
+});
+$("nextBtn").addEventListener("click", next);
+$("quitBtn").addEventListener("click", finish);
+$("restart").addEventListener("click", () => { state.screen = "start"; renderStart(); show(); });
+$("retryWrong").addEventListener("click", () => { const w = state.wrong || []; if (w.length) start(w); });
+document.addEventListener("keydown", (e) => {
+  if (state.screen !== "quiz") return;
+  if (e.key === "Enter" && !$("nextBtn").hidden) { e.preventDefault(); next(); return; }
+  const pos = KEYS.indexOf(e.key); if (pos < 0) return;
+  const qi = state.order[state.idx]; const q = Q[qi];
+  if (q.t === "tf" && pos > 1) return;
+  const oi = state.optOrder[qi][pos]; if (oi !== undefined) answer(oi);
+});
+
+function boot(data) {
+  renderStart();
+  if (data && data.state && data.state.v === QV && data.state.order && data.state.order.length) { state = data.state; }
+  show();
+}
+window.claude?.hot?.snapshot?.(() => ({ state }));
+window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
+</script>
+</body>
+</html>
