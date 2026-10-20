@@ -5,156 +5,255 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>障害福祉サービス確認テスト</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Old+Mincho:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
 <style>
-/* Layout: one reading column (max 720px). Start card → one question per screen with instant 解説 → result with section breakdown. */
+/* Layout: one 560px column for start/result; quiz is a bottom-sheet flow on phones and a sidebar + 660px main column from 900px up. Tokens follow Ubie Vitals (blue 600 primary, black 900 text, radius 12/9999, flat). */
 :root {
-  --bg: #f4f6f3;
-  --surface: #ffffff;
-  --fg: #1e2a2d;
-  --muted: #5d6c70;
-  --line: #d6ddd9;
-  --accent: #2d6b8a;
-  --accent-soft: #e1edf3;
-  --ok: #2c7a4f;
-  --ok-soft: #e2f2e8;
-  --ng: #b1443a;
-  --ng-soft: #f8e5e2;
-  --font-body: "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
-  --font-display: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --bg: #ffffff; --bg-2: #fafafa; --bg-3: #f6f6f6;
+  --fg: #32353a; --sub: #686a6d; --placeholder: #96989a;
+  --line: #dcdddd; --line-2: #c5c6c7;
+  --primary: #3959cc; --primary-hover: #304cad; --blue-text: #283f91; --blue-bg: #f0f2fc;
+  --green: #1c9167; --green-border: #27cc91; --green-bg: #e9faf4;
+  --red: #a1213c; --red-fill: #c12748; --red-border: #e85474; --red-bg: #fceff2;
+  --orange: #b57212; --orange-fill: #ffa11a; --orange-border: #ffc46f; --orange-bg: #fff9f0;
+  --pink: #9b2350; --pink-bg: #fcf0f5;
+  --font: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #141a1c; --surface: #1d2528; --fg: #e6ebe9; --muted: #9aa8ab; --line: #334040;
-    --accent: #80b7d2; --accent-soft: #223540; --ok: #7fcf9f; --ok-soft: #1e3a2b; --ng: #e68a7e; --ng-soft: #432724;
+    --bg: #16191f; --bg-2: #1f2329; --bg-3: #272b32; --fg: #f6f6f6; --sub: #c5c6c7; --placeholder: #96989a;
+    --line: #393c41; --line-2: #55575b; --primary: #8296df; --primary-hover: #aab8e9; --blue-text: #cfd7f3; --blue-bg: #203374;
+    --green: #77dfba; --green-border: #27cc91; --green-bg: #125c41; --red: #f3a5b6; --red-fill: #c12748; --red-border: #e85474; --red-bg: #661526;
+    --orange: #ffd79d; --orange-fill: #ffa11a; --orange-border: #d98916; --orange-bg: #73480c; --pink: #efa6c2; --pink-bg: #621632;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #141a1c; --surface: #1d2528; --fg: #e6ebe9; --muted: #9aa8ab; --line: #334040;
-  --accent: #80b7d2; --accent-soft: #223540; --ok: #7fcf9f; --ok-soft: #1e3a2b; --ng: #e68a7e; --ng-soft: #432724;
+  --bg: #16191f; --bg-2: #1f2329; --bg-3: #272b32; --fg: #f6f6f6; --sub: #c5c6c7; --placeholder: #96989a;
+  --line: #393c41; --line-2: #55575b; --primary: #8296df; --primary-hover: #aab8e9; --blue-text: #cfd7f3; --blue-bg: #203374;
+  --green: #77dfba; --green-border: #27cc91; --green-bg: #125c41; --red: #f3a5b6; --red-fill: #c12748; --red-border: #e85474; --red-bg: #661526;
+  --orange: #ffd79d; --orange-fill: #ffa11a; --orange-border: #d98916; --orange-bg: #73480c; --pink: #efa6c2; --pink-bg: #621632;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
-  background: var(--bg); color: var(--fg);
-  font-family: var(--font-body); font-size: 16px; line-height: 1.75;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 24px 48px;
+  background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0;
 }
-.wrap { max-width: 720px; margin: 0 auto; display: grid; gap: 20px; }
-header { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 2px solid var(--accent); }
-.eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-h1 { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.3; margin: 0; text-wrap: balance; }
-header p { margin: 0; color: var(--muted); font-size: 14px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px; display: grid; gap: 16px; min-width: 0; }
-h2 { font-family: var(--font-display); font-size: 19px; margin: 0; text-wrap: balance; }
-h3 { font-size: 15px; margin: 0; color: var(--muted); font-weight: 700; }
-.secs { display: grid; gap: 8px; }
-.sec { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
-.sec input { width: 18px; height: 18px; accent-color: var(--accent); }
-.sec .n { margin-left: auto; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
-.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-label.opt { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
-label.opt input { accent-color: var(--accent); width: 16px; height: 16px; }
-button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 10px 18px; }
-button:focus-visible, .sec:focus-within, .choice:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
-button.primary:disabled { opacity: .5; cursor: not-allowed; }
-.best { font-size: 13px; color: var(--muted); }
-.top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
-.bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s; }
-.qtype { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 700; margin-right: 6px; vertical-align: middle; }
-.qtext { font-size: 17px; font-weight: 700; margin: 0; line-height: 1.7; }
-.choices { display: grid; gap: 8px; }
-.choice { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; text-align: left; padding: 12px 14px; line-height: 1.6; border: 1.5px solid var(--line); background: var(--surface); }
-.choice:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
-.choice:disabled { cursor: default; }
-.choice .k { font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
-.choice.correct { border-color: var(--ok); background: var(--ok-soft); }
-.choice.correct .k { color: var(--ok); }
-.choice.wrong { border-color: var(--ng); background: var(--ng-soft); }
-.choice.wrong .k { color: var(--ng); }
-.verdict { font-weight: 700; font-size: 17px; }
-.verdict.ok { color: var(--ok); }
-.verdict.ng { color: var(--ng); }
-.exp { border-left: 4px solid var(--accent); padding: 4px 0 4px 14px; font-size: 15px; display: grid; gap: 6px; }
-.exp b { color: var(--accent); }
-.score { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.score .big { font-family: var(--font-display); font-size: 48px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
-.score .pct { color: var(--muted); font-size: 15px; }
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-th { color: var(--muted); font-weight: 700; font-size: 12px; letter-spacing: .06em; }
-td.num { font-variant-numeric: tabular-nums; white-space: nowrap; width: 72px; }
-td .mini { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; min-width: 80px; }
-td .mini i { display: block; height: 100%; background: var(--accent); }
-.review { display: grid; gap: 14px; }
-.rv { border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 8px; font-size: 15px; }
-.rv .q { font-weight: 700; }
-.rv .ans { display: grid; gap: 2px; font-size: 14px; }
-.rv .ans .ng { color: var(--ng); }
-.rv .ans .ok { color: var(--ok); }
-.note { font-size: 13px; color: var(--muted); }
-.tag { font-size: 12px; color: var(--muted); }
-@media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+button { font: inherit; cursor: pointer; color: inherit; }
+button:focus-visible, input:focus-visible, label:focus-within { outline: 3px solid var(--primary); outline-offset: 2px; }
+h1, h2 { margin: 0; text-wrap: balance; font-weight: 700; }
+.screen { max-width: 560px; margin: 0 auto; padding-block: 40px 32px; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.brand { font-size: 14px; font-weight: 700; color: var(--sub); }
+.hero { display: flex; flex-direction: column; gap: 8px; }
+.hero h1 { font-size: 28px; line-height: 1.4; }
+.lead { margin: 0; font-size: 14px; color: var(--sub); }
+.tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 9999px; font-size: 12px; font-weight: 700; line-height: 1.5; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tag-pink { background: var(--pink-bg); color: var(--pink); align-self: flex-start; }
+.tag-blue { background: var(--blue-bg); color: var(--blue-text); }
+.tag-green { background: var(--green-bg); color: var(--green); }
+.tag-red { background: var(--red-bg); color: var(--red); }
+.tag-orange { background: var(--orange-bg); color: var(--orange); }
+.tag-grey { background: var(--bg-3); color: var(--sub); }
+.modes { display: flex; gap: 6px; }
+.mode { flex: 1 1 0; min-height: 40px; border: 2px solid var(--line); border-radius: 9999px; background: var(--bg); color: var(--sub); font-size: 13px; font-weight: 700; padding: 0 4px; }
+.mode.on { border-color: var(--primary); background: var(--blue-bg); color: var(--blue-text); }
+.meta-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--sub); padding: 0 4px; }
+.cards { display: flex; flex-direction: column; gap: 8px; }
+.card { display: grid; grid-template-columns: 24px 1fr auto; gap: 12px; align-items: center; min-height: 56px; padding: 10px 14px; background: var(--bg); border: 2px solid var(--line); border-radius: 12px; cursor: pointer; }
+.card.on { background: var(--blue-bg); border-color: var(--primary); }
+.card input { width: 22px; height: 22px; margin: 0; accent-color: var(--primary); }
+.card .t { display: flex; flex-direction: column; min-width: 0; }
+.card .t b { font-size: 15px; }
+.card .t small { font-size: 12px; color: var(--sub); }
+.note { font-size: 12px; color: var(--sub); }
+.actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.btn { width: 100%; min-height: 56px; border: 0; border-radius: 9999px; font-size: 16px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px; }
+.btn.primary { background: var(--primary); color: #fff; }
+.btn.primary:hover { background: var(--primary-hover); }
+.btn.primary:disabled { opacity: .5; cursor: not-allowed; }
+.btn.secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); min-height: 52px; font-size: 15px; }
+.btn.green { background: var(--green); color: #fff; }
+.btn.red { background: var(--red-fill); color: #fff; }
+.btn svg { flex: 0 0 auto; }
+
+/* quiz */
+#quiz { max-width: none; padding-block: 24px 32px; }
+.quizgrid { display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 660px; margin: 0 auto; width: 100%; }
+.side { display: none; }
+.main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.top { display: flex; align-items: center; gap: 12px; }
+.iconbtn { width: 44px; height: 44px; border: 0; border-radius: 22px; background: var(--bg-3); color: var(--sub); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.bar { flex: 1 1 auto; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--primary); border-radius: 4px; transition: width .3s; }
+.count { font-size: 13px; font-weight: 700; color: var(--sub); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.qhead { display: flex; align-items: center; gap: 8px; }
+.qtext { font-size: 20px; line-height: 1.6; }
+.choices { display: flex; flex-direction: column; gap: 10px; }
+.choice { display: flex; align-items: center; gap: 12px; text-align: left; min-height: 60px; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--bg); color: var(--fg); font-size: 15px; line-height: 1.6; width: 100%; }
+.choice:hover:not(:disabled) { border-color: var(--primary); background: var(--blue-bg); }
+.choice:disabled { cursor: default; color: var(--placeholder); }
+.choice .k { width: 28px; height: 28px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex: 0 0 auto; border: 2px solid var(--line-2); color: var(--sub); }
+.choice:disabled .k { border-color: var(--line); color: var(--placeholder); }
+.choice .lbl { margin-left: auto; font-size: 11px; font-weight: 700; }
+.choice.correct { border-color: var(--green-border); background: var(--green-bg); color: var(--fg); font-weight: 700; }
+.choice.correct .k { background: var(--green); border-color: var(--green); color: #fff; }
+.choice.correct .lbl { color: var(--green); }
+.choice.wrong { border-color: var(--red-border); background: var(--red-bg); color: var(--fg); }
+.choice.wrong .k { background: var(--red-fill); border-color: var(--red-fill); color: #fff; }
+.choice.wrong .lbl { color: var(--red); }
+.hint { margin: 0; font-size: 12px; color: var(--sub); text-align: center; }
+
+/* feedback: bottom sheet on phones, inline panel from 900px */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 5; animation: dim .3s ease-out both; }
+.fb { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--bg); border-radius: 16px 16px 0 0; padding: 16px max(20px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 14px; max-height: 85vh; overflow-y: auto; animation: sheetUp .45s cubic-bezier(.2,.9,.3,1) both; }
+.fb .handle { width: 36px; height: 4px; border-radius: 2px; background: var(--line); align-self: center; }
+.fb .head { display: flex; align-items: center; gap: 12px; }
+.fb .icon { width: 44px; height: 44px; border-radius: 22px; color: #fff; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; animation: pop .5s .15s cubic-bezier(.2,.9,.3,1.2) both; }
+.fb.ok .icon { background: var(--green); } .fb.ng .icon { background: var(--red-fill); }
+.fb .verdict { font-size: 22px; font-weight: 700; }
+.fb.ok .verdict { color: var(--green); } .fb.ng .verdict { color: var(--red); }
+.fb .chip { margin-left: auto; }
+.fb .box { background: var(--bg-2); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.fb .box b { font-size: 13px; }
+.fb .box p { margin: 0; }
+@keyframes sheetUp { 0% { transform: translateY(110%); } 70% { transform: translateY(-8px); } 100% { transform: translateY(0); } }
+@keyframes pop { 0% { transform: scale(.5); opacity: 0; } 60% { transform: scale(1.18); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes dim { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .fb, .fb .icon, .overlay, .bar i { animation: none; transition: none; } }
+
+@media (min-width: 900px) {
+  .quizgrid { grid-template-columns: 260px minmax(0, 660px); max-width: 980px; gap: 40px; }
+  .side { display: flex; flex-direction: column; gap: 4px; }
+  .side h3 { margin: 0 0 8px 12px; font-size: 12px; color: var(--sub); }
+  .side .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 12px; font-size: 14px; color: var(--sub); }
+  .side .row.cur { background: var(--blue-bg); color: var(--blue-text); font-weight: 700; }
+  .side .row span:last-child { font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .side .stats { margin-top: auto; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--line); font-size: 12px; color: var(--sub); }
+  .side .stats b { color: var(--fg); }
+  .overlay { display: none; }
+  .fb { position: static; border-radius: 12px; border: 2px solid var(--green-border); padding: 18px 24px; max-height: none; animation: fadeIn .3s ease-out both; }
+  .fb.ng { border-color: var(--red-border); }
+  .fb .handle { display: none; }
+  .fb .next { width: auto; min-height: 44px; margin-left: auto; font-size: 15px; padding: 0 22px; }
+  .fb .head { flex-wrap: wrap; }
+  .fb .chip { margin-left: 0; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+}
+@media (prefers-reduced-motion: reduce) { .fb { animation: none; } }
+
+/* result */
+.rhead { display: flex; align-items: center; justify-content: space-between; }
+.rhead h1 { font-size: 24px; }
+.scorecard { display: flex; align-items: center; gap: 18px; padding: 18px 20px; border-radius: 12px; background: var(--blue-bg); flex-wrap: wrap; }
+.scorecard .big { font-size: 40px; font-weight: 700; line-height: 1.1; color: var(--blue-text); font-variant-numeric: tabular-nums; }
+.scorecard .big small { font-size: 16px; color: var(--sub); margin-left: 4px; font-weight: 700; }
+.scorecard .txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.scorecard .txt .tag { align-self: flex-start; }
+.ghead { display: flex; align-items: center; gap: 8px; padding: 0 4px; font-size: 14px; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.weak { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border: 2px solid var(--orange-border); border-radius: 12px; }
+.weak .t { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.weak .t b { font-size: 14px; }
+.mini { height: 6px; background: var(--bg-3); border-radius: 3px; overflow: hidden; }
+.mini i { display: block; height: 100%; background: var(--orange-fill); border-radius: 3px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.strong { padding: 10px 12px; background: var(--bg-2); border-radius: 12px; display: flex; flex-direction: column; }
+.strong b { font-size: 13px; }
+.strong span { font-size: 12px; color: var(--green); font-weight: 700; font-variant-numeric: tabular-nums; }
+.review { display: flex; flex-direction: column; gap: 10px; }
+.rv { border: 2px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.rv .q { font-weight: 700; font-size: 15px; }
+.rv .ans { display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+.rv .ans .ng { color: var(--red); } .rv .ans .ok { color: var(--green); }
+.rv p { margin: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <header>
-    <div class="eyebrow">理解度チェック</div>
-    <h1>障害福祉サービス確認テスト</h1>
-    <p>『図解でわかる障害福祉サービス』の主要テーマから80問。1問ごとに解説が出ます。</p>
-  </header>
+<section class="screen" id="start">
+  <div class="hero">
+    <span class="brand">福祉ドリル</span>
+    <h1>障害福祉サービス<br>確認テスト</h1>
+    <p class="lead">『図解でわかる障害福祉サービス』の主要テーマから80問。1問ごとに解説が出ます。</p>
+    <span class="tag tag-pink" id="best" hidden></span>
+  </div>
+  <div class="modes" role="tablist" aria-label="出題モード">
+    <button type="button" class="mode on" data-mode="sections" role="tab" aria-selected="true">分野別</button>
+    <button type="button" class="mode" data-mode="random" role="tab" aria-selected="false">ランダム10問</button>
+    <button type="button" class="mode" data-mode="wrong" role="tab" aria-selected="false">間違えた問題</button>
+  </div>
+  <div id="secBlock" style="display:flex;flex-direction:column;gap:8px">
+    <div class="meta-row"><span id="selCount"></span><span>前回の正答</span></div>
+    <div class="cards" id="secList"></div>
+  </div>
+  <p class="note" id="modeNote" hidden></p>
+  <div class="actions">
+    <button type="button" class="btn primary" id="startBtn">テストを始める</button>
+    <span class="note" id="startInfo"></span>
+  </div>
+  <p class="note">数字や制度名は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。手元の版と異なる記述があれば、本の記載を優先して読み比べてください。</p>
+</section>
 
-  <section class="card" id="start">
-    <h2>出題範囲を選ぶ</h2>
-    <div class="secs" id="secList"></div>
-    <div class="row">
-      <label class="opt"><input type="checkbox" id="shuffle"> 出題順をシャッフルする</label>
-      <label class="opt"><input type="checkbox" id="shuffleOpts"> 選択肢の順番も入れ替える</label>
+<section class="screen" id="quiz" hidden>
+  <div class="quizgrid">
+    <aside class="side" id="side"></aside>
+    <div class="main">
+      <div class="top">
+        <button type="button" class="iconbtn" id="quitBtn" aria-label="中断して結果を見る"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+        <div class="bar"><i id="prog"></i></div>
+        <span class="count" id="counter"></span>
+      </div>
+      <div class="qhead"><span class="tag tag-blue" id="secName"></span><span class="note" id="qtype"></span></div>
+      <h2 class="qtext" id="qtext"></h2>
+      <div class="choices" id="choices"></div>
+      <p class="hint" id="hint">1〜4 のキーでも選べます。Enter で次へ</p>
+      <div class="fb" id="fb" hidden>
+        <span class="handle"></span>
+        <div class="head">
+          <span class="icon" id="fbIcon"></span>
+          <span class="verdict" id="verdict" aria-live="polite"></span>
+          <span class="tag chip" id="chip" hidden></span>
+          <button type="button" class="btn next" id="nextBtn">次の問題へ <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+        </div>
+        <div class="box"><b id="fbAns"></b><p id="fbExp"></p></div>
+        <button type="button" class="btn next mobile" id="nextBtnM">次の問題へ <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+      </div>
     </div>
-    <div class="row">
-      <button class="primary" id="startBtn">テストを始める</button>
-      <span class="best" id="best"></span>
-    </div>
-    <p class="note">数字や制度名は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。手元の版と異なる記述があれば、本の記載を優先して読み比べてください。</p>
-  </section>
+  </div>
+  <div class="overlay" id="overlay" hidden></div>
+</section>
 
-  <section class="card" id="quiz" hidden>
-    <div class="top"><span id="counter"></span><span id="secName"></span></div>
-    <div class="bar"><i id="prog"></i></div>
-    <p class="qtext"><span class="qtype" id="qtype"></span><span id="qtext"></span></p>
-    <div class="choices" id="choices"></div>
-    <div id="feedback" hidden>
-      <div class="verdict" id="verdict"></div>
-      <div class="exp" id="exp"></div>
+<section class="screen" id="result" hidden>
+  <div class="rhead"><h1>結果</h1><span class="note" id="rmeta"></span></div>
+  <div class="scorecard">
+    <svg role="img" id="ring" aria-label="" width="100" height="100" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="var(--bg)" stroke-width="10"></circle>
+      <circle id="ringFill" cx="50" cy="50" r="42" fill="none" stroke="var(--primary)" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 263.9" transform="rotate(-90 50 50)"></circle>
+      <text id="ringText" x="50" y="57" text-anchor="middle" font-size="20" font-weight="700" fill="var(--blue-text)" font-family="BIZ UDPGothic, sans-serif"></text>
+    </svg>
+    <div class="txt">
+      <div class="big" id="scoreNum"></div>
+      <span class="tag tag-green" id="delta" hidden></span>
+      <div class="note" id="comment"></div>
     </div>
-    <div class="row">
-      <button class="primary" id="nextBtn" hidden>次の問題へ</button>
-      <button id="quitBtn">中断して結果を見る</button>
-      <span class="note">キー操作: 1〜4で選択、Enterで次へ</span>
-    </div>
-  </section>
+  </div>
+  <div class="group" id="weakGroup"><div class="ghead"><b>要復習</b><span class="tag tag-orange" id="weakCount"></span><span class="note">正答率 70% 未満</span></div><div class="cards" id="weak"></div></div>
+  <div class="group" id="strongGroup"><div class="ghead"><b>得意</b><span class="tag tag-green" id="strongCount"></span></div><div class="grid2" id="strong"></div></div>
+  <div class="group"><div class="ghead"><b id="reviewHead"></b></div><div class="review" id="review"></div></div>
+  <div class="actions">
+    <button type="button" class="btn primary" id="retryWrong"></button>
+    <button type="button" class="btn secondary" id="restart">最初の画面に戻る</button>
+  </div>
+</section>
 
-  <section class="card" id="result" hidden>
-    <h2>結果</h2>
-    <div class="score"><span class="big" id="scoreNum"></span><span class="pct" id="scorePct"></span></div>
-    <p id="comment" style="margin:0"></p>
-    <h3>分野別の正答率</h3>
-    <div style="overflow-x:auto"><table><thead><tr><th>分野</th><th>正答</th><th></th></tr></thead><tbody id="secTable"></tbody></table></div>
-    <h3 id="reviewHead">間違えた問題の復習</h3>
-    <div class="review" id="review"></div>
-    <div class="row">
-      <button class="primary" id="retryWrong">間違えた問題だけやり直す</button>
-      <button id="restart">最初の画面に戻る</button>
-    </div>
-  </section>
-</div>
+<style>
+/* the sheet's full-width next button on phones; the header button on desktop */
+#nextBtn { display: none; }
+@media (min-width: 900px) { #nextBtn { display: inline-flex; } #nextBtnM { display: none; } }
+</style>
 
 <script>
 const SECTIONS = [
@@ -403,137 +502,204 @@ const Q = [
    e:"日常生活自立支援事業は都道府県・指定都市社会福祉協議会が実施主体(窓口は市町村社協)で、契約能力はあるが判断能力が不十分な認知症高齢者・知的障害者・精神障害者が対象。契約能力を欠くほど判断能力が低下している場合は成年後見制度の対象になる。"},
 ];
 
-const $ = (id) => document.getElementById(id);
+const QV = 3;
 const KEYS = ["1","2","3","4"];
-const QV = 2; // bump when questions are added or reordered, so a stale in-page snapshot is not restored
-let state = { v: QV, screen: "start", order: [], idx: 0, answers: {}, optOrder: {}, shuffleOpts: false };
+const $ = (id) => document.getElementById(id);
+const CHECK = '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>';
+const CROSS = '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>';
+const SMALL_CHECK = CHECK.replace('width="22" height="22"', 'width="16" height="16"');
+const SMALL_CROSS = CROSS.replace('width="22" height="22"', 'width="16" height="16"');
+
+let state = { v: QV, screen: "start", mode: "sections", order: [], idx: 0, answers: {}, optOrder: {}, streak: 0 };
+let selected = SECTIONS.map(() => true);
 
 function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 function load(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+function wrongIds() { const w = load("wrong"); return (w && w.v === QV && Array.isArray(w.ids)) ? w.ids.filter((i) => i >= 0 && i < Q.length) : []; }
+function lastBySection() { const l = load("last"); return (l && l.v === QV && l.by) ? l.by : {}; }
 
+/* ---------- start screen ---------- */
 function renderStart() {
+  const b = load("best");
+  $("best").hidden = !b; if (b) $("best").textContent = `最高記録 ${b.c} / ${b.n}問`;
+  const last = lastBySection();
   const list = $("secList"); list.innerHTML = "";
   SECTIONS.forEach((name, i) => {
-    const n = Q.filter(q => q.s === i).length;
-    const l = document.createElement("label"); l.className = "sec";
-    l.innerHTML = `<input type="checkbox" id="sec${i}" checked> <span>${name}</span><span class="n">${n}問</span>`;
+    const n = Q.filter((q) => q.s === i).length;
+    const l = document.createElement("label"); l.className = "card" + (selected[i] ? " on" : "");
+    const r = last[i];
+    let tag = '<span class="tag tag-grey">未受験</span>';
+    if (r) { const pct = r.c / r.n; tag = `<span class="tag ${pct >= 0.7 ? "tag-green" : "tag-orange"}">${r.c} / ${r.n}</span>`; }
+    l.innerHTML = `<input type="checkbox" id="sec${i}" ${selected[i] ? "checked" : ""}><span class="t"><b>${name}</b><small>${n}問</small></span>${tag}`;
+    l.querySelector("input").addEventListener("change", (e) => { selected[i] = e.target.checked; l.classList.toggle("on", selected[i]); updateStartInfo(); });
     list.appendChild(l);
   });
-  const b = load("best");
-  $("best").textContent = b ? `これまでの最高: ${b.c} / ${b.n} 問 (${b.d})` : "";
+  document.querySelectorAll(".mode").forEach((btn) => { const on = btn.dataset.mode === state.mode; btn.classList.toggle("on", on); btn.setAttribute("aria-selected", on ? "true" : "false"); });
+  updateStartInfo();
+}
+function poolIds() { return Q.map((q, i) => selected[q.s] ? i : -1).filter((i) => i >= 0); }
+function updateStartInfo() {
+  const m = state.mode; const sel = selected.filter(Boolean).length;
+  $("secBlock").hidden = m === "wrong";
+  $("selCount").textContent = `${sel}つの分野を選択中`;
+  let n = 0, note = "";
+  if (m === "sections") { n = poolIds().length; }
+  else if (m === "random") { n = Math.min(10, poolIds().length); note = "選んだ分野から10問をランダムに出題します。"; }
+  else { n = wrongIds().length; note = n ? "これまでに間違えた問題だけを出題します。正解すると一覧から外れます。" : "まだ間違えた問題はありません。まずは分野別かランダムで解いてみましょう。"; }
+  $("modeNote").hidden = !note; $("modeNote").textContent = note;
+  $("startBtn").disabled = n === 0;
+  $("startInfo").textContent = n ? `${n}問 ・ 約${Math.max(1, Math.round(n * 0.25))}分` : "出題できる問題がありません";
 }
 
+/* ---------- quiz ---------- */
 function start(ids) {
-  state.answers = {}; state.optOrder = {}; state.idx = 0;
-  state.shuffleOpts = $("shuffleOpts").checked;
-  state.order = $("shuffle").checked ? shuffle(ids) : ids;
-  state.order.forEach(i => {
-    const q = Q[i];
-    state.optOrder[i] = (state.shuffleOpts && q.t === "mc") ? shuffle([0,1,2,3]) : q.o.map((_, k) => k);
-  });
+  state.answers = {}; state.optOrder = {}; state.idx = 0; state.streak = 0; state.order = ids;
+  ids.forEach((i) => { state.optOrder[i] = Q[i].o.map((_, k) => k); });
   state.screen = "quiz"; show();
 }
-
 function show() {
-  $("start").hidden = state.screen !== "start";
-  $("quiz").hidden = state.screen !== "quiz";
-  $("result").hidden = state.screen !== "result";
+  ["start", "quiz", "result"].forEach((id) => { $(id).hidden = state.screen !== id; });
+  if (state.screen === "start") renderStart();
   if (state.screen === "quiz") renderQ();
   if (state.screen === "result") renderResult();
   window.scrollTo({ top: 0 });
 }
-
 function renderQ() {
   const qi = state.order[state.idx]; const q = Q[qi];
   const answered = state.answers[qi] !== undefined;
-  $("counter").textContent = `第${state.idx + 1}問 / ${state.order.length}問`;
-  $("secName").textContent = SECTIONS[q.s];
+  $("counter").textContent = `${state.idx + 1} / ${state.order.length}`;
   $("prog").style.width = `${(state.idx / state.order.length) * 100}%`;
+  $("secName").textContent = SECTIONS[q.s];
   $("qtype").textContent = q.t === "tf" ? "○×" : "4択";
   $("qtext").textContent = q.q;
   const box = $("choices"); box.innerHTML = "";
   state.optOrder[qi].forEach((oi, pos) => {
-    const b = document.createElement("button"); b.className = "choice"; b.type = "button";
-    b.innerHTML = `<span class="k">${q.t === "tf" ? "" : KEYS[pos]}</span><span>${q.o[oi]}</span>`;
-    b.disabled = answered;
-    if (answered) { if (oi === q.a) b.classList.add("correct"); else if (oi === state.answers[qi]) b.classList.add("wrong"); }
+    const b = document.createElement("button"); b.type = "button"; b.className = "choice"; b.disabled = answered;
+    let k = q.t === "tf" ? (oi === 0 ? "○" : "×") : KEYS[pos]; let lbl = "";
+    if (answered) {
+      if (oi === q.a) { b.classList.add("correct"); k = SMALL_CHECK; lbl = oi === state.answers[qi] ? "あなたの回答" : "正答"; }
+      else if (oi === state.answers[qi]) { b.classList.add("wrong"); k = SMALL_CROSS; lbl = "あなたの回答"; }
+    }
+    b.innerHTML = `<span class="k">${k}</span><span>${esc(q.o[oi])}</span>${lbl ? `<span class="lbl">${lbl}</span>` : ""}`;
     b.addEventListener("click", () => answer(oi));
     box.appendChild(b);
   });
-  $("feedback").hidden = !answered;
-  $("nextBtn").hidden = !answered;
-  if (answered) fillFeedback(q, state.answers[qi]);
-  $("nextBtn").textContent = state.idx === state.order.length - 1 ? "結果を見る" : "次の問題へ";
+  $("hint").hidden = answered;
+  renderSide();
+  if (answered) showFeedback(q, state.answers[qi]); else hideFeedback();
 }
-
-function fillFeedback(q, chosen) {
-  const ok = chosen === q.a;
-  const v = $("verdict"); v.textContent = ok ? "正解" : "不正解"; v.className = "verdict " + (ok ? "ok" : "ng");
-  $("exp").innerHTML = `<div><b>正答:</b> ${q.o[q.a]}</div><div>${q.e}</div>`;
+function renderSide() {
+  const side = $("side"); const cur = Q[state.order[state.idx]].s;
+  const done = state.order.filter((i) => state.answers[i] !== undefined);
+  const correct = done.filter((i) => state.answers[i] === Q[i].a).length;
+  let html = "<h3>分野の進み具合</h3>";
+  SECTIONS.forEach((name, s) => {
+    const ids = state.order.filter((i) => Q[i].s === s); if (!ids.length) return;
+    const c = ids.filter((i) => state.answers[i] === Q[i].a).length;
+    const d = ids.filter((i) => state.answers[i] !== undefined).length;
+    const fin = d === ids.length;
+    const tag = fin ? `<span class="tag ${c / ids.length >= 0.7 ? "tag-green" : "tag-orange"}">${c} / ${ids.length}</span>` : `<span>${c} / ${ids.length}</span>`;
+    html += `<div class="row${s === cur ? " cur" : ""}"><span>${name}</span>${tag}</div>`;
+  });
+  html += `<div class="stats"><b>ここまで ${correct} / ${done.length} 正解</b><br>キー操作: 1〜4 で選択、Enter で次へ</div>`;
+  side.innerHTML = html;
 }
-
+function showFeedback(q, chosen) {
+  const ok = chosen === q.a; const fb = $("fb");
+  fb.hidden = false; fb.className = "fb " + (ok ? "ok" : "ng");
+  $("overlay").hidden = false;
+  $("fbIcon").innerHTML = ok ? CHECK : CROSS;
+  $("verdict").textContent = ok ? "正解！" : "不正解";
+  const chip = $("chip");
+  if (ok && state.streak >= 2) { chip.hidden = false; chip.className = "tag chip tag-green"; chip.textContent = `${state.streak}問連続`; }
+  else if (!ok) { chip.hidden = false; chip.className = "tag chip tag-red"; chip.textContent = "要復習に追加"; }
+  else chip.hidden = true;
+  $("fbAns").textContent = `正答: ${q.o[q.a]}`;
+  $("fbExp").textContent = q.e;
+  const last = state.idx === state.order.length - 1;
+  [$("nextBtn"), $("nextBtnM")].forEach((b) => { b.className = "btn next " + (ok ? "green" : "red"); b.firstChild.textContent = last ? "結果を見る " : "次の問題へ "; });
+  (window.innerWidth >= 900 ? $("nextBtn") : $("nextBtnM")).focus({ preventScroll: true });
+}
+function hideFeedback() { $("fb").hidden = true; $("overlay").hidden = true; }
 function answer(oi) {
   const qi = state.order[state.idx];
   if (state.answers[qi] !== undefined) return;
-  state.answers[qi] = oi; renderQ();
-  $("nextBtn").focus();
+  state.answers[qi] = oi;
+  const ok = oi === Q[qi].a;
+  state.streak = ok ? state.streak + 1 : 0;
+  const w = new Set(wrongIds());
+  if (ok) w.delete(qi); else w.add(qi);
+  store("wrong", { v: QV, ids: [...w] });
+  renderQ();
 }
-
 function next() {
   if (state.idx < state.order.length - 1) { state.idx++; renderQ(); window.scrollTo({ top: 0 }); }
   else finish();
 }
+function finish() { hideFeedback(); state.screen = "result"; show(); }
 
-function finish() {
-  state.screen = "result"; show();
-}
-
+/* ---------- result ---------- */
 function renderResult() {
-  const done = state.order.filter(i => state.answers[i] !== undefined);
-  const correct = done.filter(i => state.answers[i] === Q[i].a);
-  const n = done.length, c = correct.length;
-  $("scoreNum").textContent = `${c} / ${n}`;
-  const pct = n ? Math.round((c / n) * 100) : 0;
-  $("scorePct").textContent = `正答率 ${pct}%` + (n < state.order.length ? `(${state.order.length}問中${n}問に回答)` : "");
-  $("comment").textContent = pct >= 90 ? "制度の全体像から細かな要件まで、しっかり理解できています。" : pct >= 70 ? "主要な仕組みは押さえられています。間違えた分野を本で読み直すと定着します。" : pct >= 50 ? "基本は理解できていますが、サービスごとの対象や数字の違いが曖昧なようです。分野別の正答率を見て弱い章から復習しましょう。" : "まずは制度の全体像と利用手続きの章から読み直し、サービスの分類(介護給付・訓練等給付・相談支援・障害児支援)を整理すると得点が伸びます。";
-  const tb = $("secTable"); tb.innerHTML = "";
+  const done = state.order.filter((i) => state.answers[i] !== undefined);
+  const correct = done.filter((i) => state.answers[i] === Q[i].a);
+  const n = done.length, c = correct.length, pct = n ? Math.round((c / n) * 100) : 0;
+  $("rmeta").textContent = `${state.order.length}問 ・ ${new Date().toLocaleDateString("ja-JP", { month: "long", day: "numeric" })}`;
+  $("scoreNum").innerHTML = `${c}<small>/ ${n}問</small>`;
+  $("ringFill").setAttribute("stroke-dasharray", `${(pct / 100) * 263.9} 263.9`);
+  $("ringText").textContent = `${pct}%`;
+  $("ring").setAttribute("aria-label", `正答率 ${pct}パーセント`);
+  const prev = load("prev");
+  const delta = $("delta");
+  if (prev && prev.v === QV && prev.mode === state.mode && prev.n === n) { const d = c - prev.c; delta.hidden = false; delta.className = "tag " + (d >= 0 ? "tag-green" : "tag-orange"); delta.textContent = d === 0 ? "前回と同じ" : `前回より ${d > 0 ? "+" : ""}${d}問`; }
+  else delta.hidden = true;
+  $("comment").textContent = n < state.order.length ? `${state.order.length}問中${n}問に回答しました。` : pct >= 90 ? "制度の全体像から細かな要件まで、しっかり理解できています。" : pct >= 70 ? "主要な仕組みは押さえられています。要復習の分野を本で読み直すと定着します。" : pct >= 50 ? "基本は理解できていますが、サービスごとの対象や数字の違いが曖昧なようです。要復習の分野から見直しましょう。" : "まずは制度の全体像と利用手続きの章から読み直し、サービスの分類を整理すると得点が伸びます。";
+
+  const weak = [], strong = [];
   SECTIONS.forEach((name, s) => {
-    const ids = done.filter(i => Q[i].s === s); if (!ids.length) return;
-    const cc = ids.filter(i => state.answers[i] === Q[i].a).length;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${name}</td><td class="num">${cc} / ${ids.length}</td><td><div class="mini"><i style="width:${Math.round(cc / ids.length * 100)}%"></i></div></td>`;
-    tb.appendChild(tr);
+    const ids = done.filter((i) => Q[i].s === s); if (!ids.length) return;
+    const cc = ids.filter((i) => state.answers[i] === Q[i].a).length;
+    (cc / ids.length < 0.7 ? weak : strong).push({ name, c: cc, n: ids.length });
   });
-  const wrong = done.filter(i => state.answers[i] !== Q[i].a);
-  const rv = $("review"); rv.innerHTML = "";
+  $("weakGroup").hidden = !weak.length; $("strongGroup").hidden = !strong.length;
+  $("weakCount").textContent = `${weak.length}分野`; $("strongCount").textContent = `${strong.length}分野`;
+  $("weak").innerHTML = weak.map((w) => `<div class="weak"><span class="t"><b>${w.name}</b><span class="mini"><i style="width:${Math.round(w.c / w.n * 100)}%"></i></span></span><span class="tag tag-orange">${w.c} / ${w.n}</span></div>`).join("");
+  $("strong").innerHTML = strong.map((w) => `<div class="strong"><b>${w.name}</b><span>${w.c} / ${w.n}</span></div>`).join("");
+
+  const wrong = done.filter((i) => state.answers[i] !== Q[i].a);
   $("reviewHead").textContent = wrong.length ? `間違えた問題の復習(${wrong.length}問)` : "間違えた問題はありません";
-  wrong.forEach(i => {
-    const q = Q[i]; const d = document.createElement("div"); d.className = "rv";
-    d.innerHTML = `<div class="tag">${SECTIONS[q.s]}</div><div class="q">${q.q}</div><div class="ans"><span class="ng">あなたの回答: ${q.o[state.answers[i]]}</span><span class="ok">正答: ${q.o[q.a]}</span></div><div>${q.e}</div>`;
-    rv.appendChild(d);
-  });
-  $("retryWrong").hidden = !wrong.length;
-  if (n === state.order.length) {
-    const b = load("best");
-    if (!b || c / n > b.c / b.n) store("best", { c, n, d: new Date().toLocaleDateString("ja-JP") });
-  }
+  $("review").innerHTML = wrong.map((i) => { const q = Q[i]; return `<div class="rv"><span class="tag tag-blue" style="align-self:flex-start">${SECTIONS[q.s]}</span><div class="q">${esc(q.q)}</div><div class="ans"><span class="ng">あなたの回答: ${esc(q.o[state.answers[i]])}</span><span class="ok">正答: ${esc(q.o[q.a])}</span></div><p>${esc(q.e)}</p></div>`; }).join("");
+  $("retryWrong").hidden = !wrong.length; $("retryWrong").textContent = `間違えた${wrong.length}問をやり直す`;
   state.wrong = wrong;
+
+  if (n === state.order.length && n > 0) {
+    store("prev", { v: QV, mode: state.mode, c, n });
+    if (state.mode === "sections") { const b = load("best"); if (!b || c / n > b.c / b.n || (c / n === b.c / b.n && n > b.n)) store("best", { c, n, d: new Date().toLocaleDateString("ja-JP") }); }
+    const last = load("last"); const by = (last && last.v === QV && last.by) ? last.by : {};
+    [...weak, ...strong].forEach((w) => { const s = SECTIONS.indexOf(w.name); by[s] = { c: w.c, n: w.n }; });
+    store("last", { v: QV, by });
+  }
 }
 
+/* ---------- events ---------- */
+document.querySelectorAll(".mode").forEach((btn) => btn.addEventListener("click", () => { state.mode = btn.dataset.mode; renderStart(); }));
 $("startBtn").addEventListener("click", () => {
-  const secs = SECTIONS.map((_, i) => $("sec" + i).checked);
-  const ids = Q.map((q, i) => secs[q.s] ? i : -1).filter(i => i >= 0);
-  if (!ids.length) { $("best").textContent = "分野を1つ以上選んでください。"; return; }
-  start(ids);
+  let ids = [];
+  if (state.mode === "sections") ids = poolIds();
+  else if (state.mode === "random") ids = shuffle(poolIds()).slice(0, 10);
+  else ids = wrongIds();
+  if (ids.length) start(ids);
 });
 $("nextBtn").addEventListener("click", next);
+$("nextBtnM").addEventListener("click", next);
 $("quitBtn").addEventListener("click", finish);
-$("restart").addEventListener("click", () => { state.screen = "start"; renderStart(); show(); });
+$("overlay").addEventListener("click", () => {});
+$("restart").addEventListener("click", () => { state.screen = "start"; show(); });
 $("retryWrong").addEventListener("click", () => { const w = state.wrong || []; if (w.length) start(w); });
 document.addEventListener("keydown", (e) => {
   if (state.screen !== "quiz") return;
-  if (e.key === "Enter" && !$("nextBtn").hidden) { e.preventDefault(); next(); return; }
+  if (e.key === "Enter" && !$("fb").hidden) { e.preventDefault(); next(); return; }
   const pos = KEYS.indexOf(e.key); if (pos < 0) return;
   const qi = state.order[state.idx]; const q = Q[qi];
   if (q.t === "tf" && pos > 1) return;
@@ -541,11 +707,10 @@ document.addEventListener("keydown", (e) => {
 });
 
 function boot(data) {
-  renderStart();
-  if (data && data.state && data.state.v === QV && data.state.order && data.state.order.length) { state = data.state; }
+  if (data && data.state && data.state.v === QV && data.state.order && data.state.order.length) { state = data.state; if (data.selected) selected = data.selected; }
   show();
 }
-window.claude?.hot?.snapshot?.(() => ({ state }));
+window.claude?.hot?.snapshot?.(() => ({ state, selected }));
 window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.hot?.data ?? {});
 </script>
 </body>
