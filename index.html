@@ -193,6 +193,7 @@ h1, h2 { margin: 0; text-wrap: balance; font-weight: 700; }
   <div class="actions">
     <button type="button" class="btn primary" id="startBtn">テストを始める</button>
     <span class="note" id="startInfo"></span>
+    <a class="btn secondary" href="https://byson2562.github.io/shogai-fukushi-drill/learn.html" style="text-decoration:none">ずんだもんと学ぶ教材を読む</a>
   </div>
   <p class="note">数字や制度名は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。手元の版と異なる記述があれば、本の記載を優先して読み比べてください。</p>
 </section>
@@ -708,6 +709,7 @@ document.addEventListener("keydown", (e) => {
 
 function boot(data) {
   if (data && data.state && data.state.v === QV && data.state.order && data.state.order.length) { state = data.state; if (data.selected) selected = data.selected; }
+  else { const m = /^#s([1-7])$/.exec(location.hash || ""); if (m) { const s = Number(m[1]) - 1; selected = SECTIONS.map((_, i) => i === s); } }
   show();
 }
 window.claude?.hot?.snapshot?.(() => ({ state, selected }));

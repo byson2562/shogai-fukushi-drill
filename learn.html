@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ずんだもんと学ぶ障害福祉サービス</title>
+<meta name="description" content="『図解でわかる障害福祉サービス』の主要テーマを、ずんだもんと四国めたんの会話で学ぶWeb教材。7章構成、各章の最後に確認ドリルへのリンクつき。">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
+<style>
+/* Layout: one 680px reading column. Chapter pills on top, dialogue bubbles (めたん left / ずんだもん right), point boxes and tables between, drill link at the end of each chapter. Tokens follow Ubie Vitals. */
+:root {
+  --bg: #ffffff; --bg-2: #fafafa; --bg-3: #f6f6f6; --fg: #32353a; --sub: #686a6d; --line: #dcdddd; --line-2: #c5c6c7;
+  --primary: #3959cc; --primary-hover: #304cad; --blue-text: #283f91; --blue-bg: #f0f2fc;
+  --green: #1c9167; --green-border: #77dfba; --green-bg: #e9faf4; --zunda: #27cc91;
+  --pink: #9b2350; --pink-border: #efa6c2; --pink-bg: #fcf0f5; --metan: #e1568a;
+  --orange: #b57212; --orange-bg: #fff9f0;
+  --font: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #16191f; --bg-2: #1f2329; --bg-3: #272b32; --fg: #f6f6f6; --sub: #c5c6c7; --line: #393c41; --line-2: #55575b;
+    --primary: #8296df; --primary-hover: #aab8e9; --blue-text: #cfd7f3; --blue-bg: #203374; --green: #77dfba; --green-border: #21ad7b; --green-bg: #125c41;
+    --pink: #efa6c2; --pink-border: #b92a5f; --pink-bg: #621632; --orange: #ffd79d; --orange-bg: #73480c; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.7; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+[hidden] { display: none !important; }
+a { color: var(--primary); }
+button { font: inherit; cursor: pointer; color: inherit; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; font-weight: 700; }
+.wrap { max-width: 680px; margin: 0 auto; padding-block: 40px 48px; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.brand { font-size: 14px; font-weight: 700; color: var(--sub); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.brand a { font-weight: 700; font-size: 13px; text-decoration: none; }
+h1 { font-size: 28px; line-height: 1.4; }
+.lead { margin: 0; font-size: 14px; color: var(--sub); }
+.cast { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.castcard { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; min-width: 0; }
+.castcard b { font-size: 14px; display: block; }
+.castcard small { font-size: 12px; color: var(--sub); display: block; }
+.av { width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 18px; flex: 0 0 auto; }
+.av.z { background: var(--zunda); } .av.m { background: var(--metan); }
+.chapters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.chip { flex: 0 0 auto; min-height: 40px; padding: 0 14px; border: 2px solid var(--line); border-radius: 9999px; background: var(--bg); color: var(--sub); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.chip.on { border-color: var(--primary); background: var(--blue-bg); color: var(--blue-text); }
+.chapter { display: flex; flex-direction: column; gap: 18px; }
+.chead { display: flex; flex-direction: column; gap: 6px; }
+.chead .tag { align-self: flex-start; }
+.tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 9999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.tag-blue { background: var(--blue-bg); color: var(--blue-text); }
+.chapter h2 { font-size: 24px; line-height: 1.4; }
+.chapter h3 { font-size: 16px; color: var(--blue-text); padding: 6px 0 0; border-top: 2px solid var(--line); padding-top: 14px; margin-top: 6px; }
+.line { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: flex-start; }
+.line.z { grid-template-columns: 1fr 40px; }
+.line.z .av { grid-column: 2; grid-row: 1; }
+.line.z .bubble { grid-column: 1; grid-row: 1; }
+.line .av { width: 40px; height: 40px; border-radius: 20px; font-size: 16px; }
+.bubble { padding: 10px 14px; border-radius: 12px; font-size: 15px; line-height: 1.75; min-width: 0; }
+.line.m .bubble { background: var(--pink-bg); border: 1.5px solid var(--pink-border); border-top-left-radius: 4px; }
+.line.z .bubble { background: var(--green-bg); border: 1.5px solid var(--green-border); border-top-right-radius: 4px; }
+.bubble .who { display: block; font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.line.m .who { color: var(--pink); } .line.z .who { color: var(--green); }
+.point { background: var(--blue-bg); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.point b { font-size: 14px; color: var(--blue-text); }
+.point ul { margin: 0; padding-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 2px; }
+.point.sum { background: var(--bg-2); border: 2px solid var(--line); }
+.point.sum b { color: var(--fg); }
+.tbl { overflow-x: auto; border: 2px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 420px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--bg-2); color: var(--sub); font-size: 12px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 700; white-space: nowrap; }
+.actions { display: flex; flex-direction: column; gap: 10px; }
+.btn { width: 100%; min-height: 56px; border: 0; border-radius: 9999px; font-size: 16px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px; text-decoration: none; }
+.btn.primary { background: var(--primary); color: #fff; }
+.btn.primary:hover { background: var(--primary-hover); }
+.btn.secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); min-height: 52px; font-size: 15px; }
+.nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.nav .btn { min-height: 48px; font-size: 14px; }
+footer { font-size: 12px; color: var(--sub); border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-direction: column; gap: 4px; }
+footer p { margin: 0; }
+@media (max-width: 480px) { .cast { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span>福祉ドリル</span><a href="./">確認ドリルへ</a></div>
+  <div>
+    <h1>ずんだもんと学ぶ<br>障害福祉サービス</h1>
+    <p class="lead">『図解でわかる障害福祉サービス』の主要テーマを、7つの章に分けて会話で読み解きます。各章の最後から、その章の確認ドリルに進めます。</p>
+  </div>
+  <div class="cast">
+    <div class="castcard"><span class="av z">ず</span><span><b>ずんだもん</b><small>解説役。制度のしくみを「〜なのだ」で教えてくれる</small></span></div>
+    <div class="castcard"><span class="av m">め</span><span><b>四国めたん</b><small>質問役。読者が引っかかりやすいところを聞いてくれる</small></span></div>
+  </div>
+  <nav class="chapters" id="chapters" aria-label="章の選択"></nav>
+  <main class="chapter" id="chapter"></main>
+  <footer>
+    <p>内容は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。手元の版と異なる記述があれば、本の記載を優先してください。</p>
+    <p>ずんだもん・四国めたんは SSS合同会社のキャラクターです。公式のキャラクター利用ガイドラインに従って、名前と口調のみを使用しています。</p>
+  </footer>
+</div>
+
+<script>
+const DRILL = "./";
+// line types: ["m"|"z", text] = 会話, ["h", 見出し], ["p", タイトル, [項目]], ["s", [項目]] = 章のまとめ, ["t", [見出し行], [[行], ...]]
+const CH = [
+{ title: "制度の全体像", lead: "障害福祉サービスとは何か、どんな法律で、誰が対象で、どう分類されるか。", body: [
+  ["h", "障害福祉サービスってなに?"],
+  ["m", "ずんだもん、「障害福祉サービス」って介護保険みたいなものかしら?"],
+  ["z", "近いけれど別の制度なのだ。障害のある人が日常生活や社会生活を送るために使う公的サービスをまとめて「障害福祉サービス」と呼ぶのだ。根拠になる法律は「障害者総合支援法」、正式名称は「障害者の日常生活及び社会生活を総合的に支援するための法律」なのだ。"],
+  ["m", "名前が長いわね。昔からある法律なの?"],
+  ["z", "今の形は2013年4月からなのだ。流れを知っておくと試験で迷わないのだ。2003年の「支援費制度」で措置から契約に変わり、2006年の「障害者自立支援法」で三障害のサービスが一本化され、2013年に名前と中身を改めて今の法律になったのだ。"],
+  ["p", "制度の変遷", ["2003年 支援費制度: 措置から契約へ。精神障害は対象外だった", "2006年 障害者自立支援法: 三障害を一元化、市町村が実施主体。原則1割の応益負担で批判を受けた", "2013年 障害者総合支援法: 難病等を対象に追加、基本理念を規定"]],
+  ["h", "誰が対象?"],
+  ["m", "対象になるのはどんな人?"],
+  ["z", "身体障害者、知的障害者、精神障害者(発達障害を含む)、そして難病等の患者なのだ。難病は総合支援法で初めて加わって、対象疾病は少しずつ増えているのだ(2024年4月時点で369疾病)。"],
+  ["m", "障害者手帳がないと使えないの?"],
+  ["z", "ここが引っかけポイントなのだ。手帳は必須ではないのだ。精神障害なら自立支援医療の受給者証や医師の診断書、難病なら診断書で障害者であることを確認できれば申請できるのだ。"],
+  ["p", "3つの手帳", ["身体障害者手帳: 身体障害者福祉法、1〜6級、原則無期限", "療育手帳: 法律ではなく国の通知が根拠。自治体により名称や区分が異なる", "精神障害者保健福祉手帳: 精神保健福祉法、1〜3級、有効期限2年"]],
+  ["h", "サービスの大きな分け方"],
+  ["m", "サービスの種類が多くて覚えきれないわ。"],
+  ["z", "まず2つに分けるのだ。全国共通の個別給付である「自立支援給付」と、市町村や都道府県が地域の実情に合わせて行う「地域生活支援事業」なのだ。"],
+  ["t", ["区分", "中身", "例"], [["自立支援給付", "国が基準を決める全国共通の個別給付", "介護給付、訓練等給付、相談支援、自立支援医療、補装具"], ["地域生活支援事業", "自治体の裁量で実施", "移動支援、意思疎通支援、日常生活用具、地域活動支援センター"]]],
+  ["z", "自立支援給付の中でも、介護を中心にした「介護給付」と、訓練や就労を支える「訓練等給付」の違いが、このあとの章の土台になるのだ。"],
+  ["h", "介護保険との関係"],
+  ["m", "65歳になったらどうなるの?"],
+  ["z", "介護保険が優先なのだ(総合支援法第7条)。ただし同行援護・行動援護・就労系サービスのように介護保険にないものは障害福祉から使えるし、量が足りないときは上乗せもできるのだ。2018年からは両方の事業所を使いやすくする共生型サービスや、65歳前から使っていた人の介護保険の負担を軽くする仕組み(新高額障害福祉サービス等給付費)もあるのだ。"],
+  ["h", "考え方の土台"],
+  ["m", "制度の背景にある考え方も聞いておきたいわ。"],
+  ["z", "キーワードは「社会モデル」なのだ。障害は本人の心身だけでなく、社会の側の「社会的障壁」との関係で生まれる、という考え方で、2011年の障害者基本法改正で障害者の定義に入ったのだ。WHOのICF(国際生活機能分類)も同じ流れで、心身機能・身体構造、活動、参加という生活機能と、環境因子・個人因子の相互作用で見るのだ。"],
+  ["s", ["総合支援法は2013年施行。前身は支援費制度(2003)と自立支援法(2006)", "対象は3障害+難病等。手帳は必須ではない", "自立支援給付(全国共通)と地域生活支援事業(自治体の裁量)", "65歳以上は介護保険が優先。介護保険にないサービスは障害福祉で", "社会モデルと社会的障壁(基本法2011年改正)、ICF"]]
+]},
+{ title: "利用手続きと利用者負担", lead: "申請から支給決定までの流れ、障害支援区分、計画相談、そして利用者負担のしくみ。", body: [
+  ["h", "申請から利用まで"],
+  ["m", "サービスを使いたいときはどこに行けばいいの?"],
+  ["z", "市町村の障害福祉の窓口なのだ。流れは、申請 → 認定調査 → 一次判定 → 二次判定 → 障害支援区分の認定 → サービス等利用計画案の提出 → 支給決定 → 受給者証の交付 → 事業者と契約 → 計画の確定 → モニタリング、なのだ。"],
+  ["p", "流れの要点", ["認定調査は80項目。医師意見書もあわせて使う", "一次判定はコンピュータ、二次判定は市町村審査会(委員は市町村長が任命)", "支給決定は市町村。勘案事項は区分、介護者の状況、環境、本人の意向、計画案など", "決定に不服があれば都道府県知事に審査請求できる"]],
+  ["h", "障害支援区分"],
+  ["m", "「障害支援区分」って何を表しているの?"],
+  ["z", "必要な支援の度合いなのだ。非該当と区分1〜6があって、6がいちばん支援が必要なのだ。2014年に「障害程度区分」から名前と調査項目が見直されて、知的障害・精神障害の特性を反映しやすくなったのだ。有効期間は原則3年なのだ。"],
+  ["m", "どのサービスでも区分が必要なの?"],
+  ["z", "介護給付は原則必要で、サービスごとに「区分○以上」が決まっているのだ。訓練等給付(就労移行支援、就労継続支援A型・B型、自立訓練、共同生活援助など)は区分の認定がなくても利用できるのだ。"],
+  ["h", "サービス等利用計画"],
+  ["m", "「サービス等利用計画」は誰が作るのかしら。"],
+  ["z", "指定特定相談支援事業者の相談支援専門員なのだ。本人や家族が作るセルフプランも認められているのだ。支給決定の前に「案」を出し、決定後に確定させて、定期的にモニタリングするのだ。"],
+  ["z", "訓練等給付では、まず原則2か月以内の「暫定支給決定」で実際に使ってもらい、本人の意向や効果を見てから本決定する仕組みもあるのだ。"],
+  ["h", "利用者負担"],
+  ["m", "お金はどれくらいかかるの?"],
+  ["z", "「応能負担」、つまり家計の負担能力に応じた負担が原則なのだ。自立支援法の1割定率(応益負担)が批判されて、2010年の改正(2012年4月施行)で法律上も応能負担になったのだ。"],
+  ["t", ["区分", "世帯の収入状況", "負担上限月額"], [["生活保護", "生活保護受給世帯", "0円"], ["低所得", "市町村民税非課税世帯", "0円"], ["一般1", "市町村民税課税世帯(所得割16万円未満。障害児は28万円未満)", "9,300円(障害児の通所・居宅は4,600円)"], ["一般2", "上記以外", "37,200円"]]],
+  ["m", "「世帯」は家族全員の収入で見るの?"],
+  ["z", "18歳以上の障害者は本人と配偶者だけなのだ(2008年7月から)。障害児は保護者の属する住民票上の世帯で見るのだ。"],
+  ["z", "ほかに、複数のサービスや介護保険との負担を合算して基準額を超えた分が戻る「高額障害福祉サービス等給付費」、入所施設やグループホームの食費・光熱水費や家賃を軽くする「補足給付」もあるのだ。"],
+  ["s", ["申請先は市町村。認定調査80項目、二次判定は市町村審査会", "区分は1〜6、6が重い。介護給付は区分が必要、訓練等給付は不要", "計画は相談支援専門員(セルフプラン可)。暫定支給決定は原則2か月以内", "応能負担。上限は0円 / 0円 / 9,300円 / 37,200円。世帯は本人と配偶者", "高額障害福祉サービス等給付費と補足給付で負担を軽減"]]
+]},
+{ title: "介護給付", lead: "訪問、外出、日中、夜間、短期入所、医療。介護給付9サービスを対象区分とセットで整理。", body: [
+  ["h", "訪問して支えるサービス"],
+  ["m", "介護給付の中で、家に来てくれるサービスから整理したいわ。"],
+  ["z", "基本は「居宅介護」なのだ。身体介護、家事援助、通院等介助、通院等乗降介助をするホームヘルプで、区分1以上なのだ。"],
+  ["z", "重度の人には「重度訪問介護」なのだ。重度の肢体不自由、または重度の知的・精神障害で行動上著しい困難がある区分4以上の人に、見守りも含めて長時間まとめて支援するのだ。2018年からは区分6の人は入院中の病院でも使えるのだ。"],
+  ["h", "外出を支えるサービス"],
+  ["m", "外出の支援は何があるの?"],
+  ["z", "2つをセットで覚えるのだ。「同行援護」は視覚障害の人の外出で、移動の援護に加えて代筆・代読などの情報提供をするのだ。区分の認定は不要なのだ。「行動援護」は知的・精神障害で行動上著しい困難がある人が対象で、区分3以上かつ行動関連項目が10点以上なのだ。"],
+  ["p", "似ているサービスの見分け方", ["同行援護 = 視覚障害、情報提供、区分不要", "行動援護 = 知的・精神、危険回避、区分3以上+行動関連項目10点以上", "移動支援 = 地域生活支援事業(市町村)。介護給付ではない"]],
+  ["h", "日中・夜間・短期"],
+  ["m", "施設に通ったり泊まったりするサービスは?"],
+  ["z", "昼間の介護は「生活介護」なのだ。区分3以上(50歳以上は区分2以上)で、入浴・排せつ・食事の介護と、創作的活動や生産活動の機会を提供するのだ。"],
+  ["z", "夜間は「施設入所支援」なのだ。区分4以上(50歳以上は区分3以上)で、昼は生活介護などと組み合わせる「昼夜分離」の考え方なのだ。"],
+  ["z", "介護者が病気のときなどに短期間泊まるのが「短期入所」(福祉型と医療型)、医療と常時の介護の両方が必要な人が病院で受けるのが「療養介護」なのだ。"],
+  ["m", "いちばん重い人向けのサービスもあるのよね。"],
+  ["z", "「重度障害者等包括支援」なのだ。区分6で意思疎通に著しい支障がある人に、居宅介護や短期入所など複数のサービスをまとめて提供するのだ。"],
+  ["t", ["サービス", "対象区分の目安", "ひとこと"], [["居宅介護", "区分1以上", "ホームヘルプ"], ["重度訪問介護", "区分4以上", "長時間、見守り込み"], ["同行援護", "不要", "視覚障害の外出"], ["行動援護", "区分3以上", "知的・精神、行動関連項目10点以上"], ["重度障害者等包括支援", "区分6", "複数サービスを包括"], ["短期入所", "区分1以上", "福祉型と医療型"], ["療養介護", "区分5〜6", "病院で医療と介護"], ["生活介護", "区分3以上(50歳以上は2)", "昼間の介護と活動"], ["施設入所支援", "区分4以上(50歳以上は3)", "夜間の介護"]]],
+  ["s", ["区分の数字は「どれだけ重い人向けか」の順に並べて覚える", "同行援護(視覚)と行動援護(知的・精神)は必ずセットで整理", "生活介護は昼、施設入所支援は夜。組み合わせて使う", "療養介護は病院、重度障害者等包括支援は区分6"]]
+]},
+{ title: "訓練等給付", lead: "自立訓練、就労系サービス、グループホームと一人暮らし支援。区分不要の「訓練・就労・住まい」。", body: [
+  ["h", "自立訓練"],
+  ["m", "訓練等給付は「働く」ことが中心なの?"],
+  ["z", "「訓練」「就労」「住まい」の3グループなのだ。まず自立訓練には、身体障害・難病向けのリハビリ中心の「機能訓練」(標準1年6か月)と、知的・精神障害向けに生活能力を高める「生活訓練」(標準2年)があるのだ。夜間に居住の場を提供しながら訓練する宿泊型自立訓練もあるのだ。"],
+  ["h", "就労系サービス"],
+  ["m", "就労系はA型とB型がややこしいわ。"],
+  ["z", "雇用契約の有無で分けるのだ。「就労継続支援A型」は雇用契約を結んで最低賃金が出る、原則65歳未満向け。「B型」は雇用契約なしで工賃を払う、年齢制限なしなのだ。"],
+  ["z", "一般企業で働きたい人は「就労移行支援」なのだ。65歳未満、標準2年(最大1年延長)で、職場実習や就職活動を支えるのだ。就職したあとは「就労定着支援」が、就労後6か月を過ぎてから最大3年間、職場や家族との調整をするのだ。"],
+  ["m", "最近できたサービスもあるのよね。"],
+  ["z", "「就労選択支援」なのだ。2025年10月に始まって、就労アセスメントで本人に合った働き方の選択を支援するのだ。B型を新しく使う人は原則利用で、A型と就労移行支援は2027年4月から原則利用になるのだ。"],
+  ["t", ["サービス", "雇用契約", "対象・期間"], [["就労移行支援", "なし", "65歳未満、標準2年(最大1年延長)"], ["就労継続支援A型", "あり(最低賃金)", "原則65歳未満、期間の定めなし"], ["就労継続支援B型", "なし(工賃)", "年齢制限なし、期間の定めなし"], ["就労定着支援", "ー", "就労後6か月から最大3年"], ["就労選択支援", "ー", "2025年10月開始。就労アセスメント"]]],
+  ["h", "住まいと一人暮らし"],
+  ["m", "住まいの支援は?"],
+  ["z", "「共同生活援助」、いわゆるグループホームなのだ。事業所の職員が介護する「介護サービス包括型」、介護を外部の居宅介護事業者に委託する「外部サービス利用型」、常時の支援体制で日中も支える「日中サービス支援型」(2018年創設、短期入所の併設が必須)の3類型なのだ。区分がなくても利用できるのだ。"],
+  ["z", "施設やグループホームから一人暮らしに移った人には「自立生活援助」なのだ。定期的な巡回訪問と随時の対応で、標準利用期間は1年なのだ。2024年の改正では、グループホームの支援内容に「一人暮らし等を希望する人への支援」も明記されたのだ。"],
+  ["s", ["自立訓練: 機能訓練1年6か月、生活訓練2年", "A型 = 雇用契約あり・最低賃金、B型 = 工賃・年齢制限なし", "就労移行は2年、就労定着は6か月後から最大3年", "就労選択支援は2025年10月開始", "グループホーム3類型、自立生活援助は標準1年"]]
+]},
+{ title: "相談支援", lead: "基本相談、計画相談、地域相談の3層と、基幹相談支援センター・協議会。", body: [
+  ["h", "3つの相談支援"],
+  ["m", "相談支援にも種類があるのね。"],
+  ["z", "土台が「基本相談支援」で、その上に「計画相談支援」と「地域相談支援」が乗る形なのだ。"],
+  ["t", ["種類", "内容", "事業者と指定"], [["基本相談支援", "相談、情報提供、関係機関との連絡調整", "両方の事業者に共通の土台"], ["計画相談支援", "サービス等利用計画の作成(サービス利用支援)とモニタリング(継続サービス利用支援)", "指定特定相談支援事業者(市町村が指定)"], ["地域相談支援", "地域移行支援と地域定着支援", "指定一般相談支援事業者(都道府県が指定)"]]],
+  ["m", "「地域移行」と「地域定着」はどう違うの?"],
+  ["z", "「地域移行支援」は、障害者支援施設や精神科病院、保護施設・矯正施設などから地域に出るときの支援で、住まい探しや外出の同行、体験利用をするのだ。「地域定着支援」は、一人暮らしなどで地域生活が不安定な人に24時間の連絡体制を確保して、緊急時に訪問や相談をするのだ。"],
+  ["h", "地域の相談体制"],
+  ["m", "市町村全体の相談はどこが担っているの?"],
+  ["z", "「基幹相談支援センター」なのだ。総合的・専門的な相談、地域の相談支援体制の強化、地域移行の促進、権利擁護・虐待防止を担う中核で、2024年4月の改正で市町村の設置が「努力義務」になったのだ。義務ではない点に注意なのだ。"],
+  ["z", "関係機関が集まって地域の課題を話し合う場が「協議会」(自立支援協議会)なのだ。2024年改正で、個別事例の検討を通じた課題把握や、構成員の守秘義務が法律に書かれたのだ。障害支援区分を判定する市町村審査会とは別物なのだ。"],
+  ["m", "相談支援専門員になるには?"],
+  ["z", "実務経験(資格により3〜10年)に加えて相談支援従事者初任者研修を修了し、5年ごとに現任研修を受けるのだ。2020年度からは主任相談支援専門員の研修もあるのだ。"],
+  ["s", ["計画相談 = 特定相談支援事業者・市町村指定、地域相談 = 一般相談支援事業者・都道府県指定", "地域移行(出るとき)と地域定着(出たあと)を区別", "基幹相談支援センターの設置は努力義務(2024年4月)", "協議会は地域課題の協議の場。審査会とは別"]]
+]},
+{ title: "障害児支援", lead: "児童福祉法に基づく通所支援・入所支援と、大人と違う手続き、2024年改正。", body: [
+  ["h", "根拠法は児童福祉法"],
+  ["m", "子どもの場合は何が違うの?"],
+  ["z", "障害児向けの支援は「児童福祉法」に一本化されているのだ(2012年改正)。通所支援は市町村、入所支援は都道府県(児童相談所)が実施主体なのだ。ただし居宅介護や短期入所など、総合支援法のサービスを障害児が使うこともあるのだ。"],
+  ["h", "通所支援"],
+  ["t", ["サービス", "対象", "内容"], [["児童発達支援", "未就学児", "日常生活の基本的動作や集団生活への適応の支援"], ["放課後等デイサービス", "就学児(原則18歳まで、20歳まで延長可)", "放課後や休校日の生活能力向上と交流"], ["保育所等訪問支援", "保育所・学校などに通う子", "訪問して集団生活への適応を専門的に支援"], ["居宅訪問型児童発達支援", "外出が著しく困難な子(2018年創設)", "家庭を訪問して発達支援"]]],
+  ["z", "2024年4月に福祉型と医療型の児童発達支援は一元化され、児童発達支援センターが地域の中核的役割を担うことも明確になったのだ。"],
+  ["h", "入所支援と手続き"],
+  ["m", "入所の場合は?"],
+  ["z", "「障害児入所支援」は福祉型と医療型で、窓口は児童相談所なのだ。18歳を超えた人の移行支援のため、2024年改正で22歳まで入所を継続できる措置が法定化されたのだ。"],
+  ["m", "手続きは大人と同じ?"],
+  ["z", "違う点があるのだ。障害児には障害支援区分の認定はなく、5領域11項目の調査で支援の必要度を見るのだ。計画は「障害児支援利用計画」を指定障害児相談支援事業者が作るのだ(セルフプラン可)。手帳も必須ではないのだ。"],
+  ["z", "利用者負担は、3〜5歳の通所支援などが2019年10月から無償化されているのだ。また、医療的ケア児支援法(2021年)で、保育所や学校での受け入れ体制整備が国・自治体の責務になったのだ。"],
+  ["s", ["根拠は児童福祉法。通所 = 市町村、入所 = 都道府県(児童相談所)", "通所支援は4種類。児童発達支援は未就学、放課後等デイは就学児", "区分認定なし、5領域11項目。計画は障害児相談支援", "2024年改正: 一元化、センターの中核化、22歳まで", "3〜5歳の無償化(2019年10月)、医療的ケア児支援法(2021年)"]]
+]},
+{ title: "関連制度と権利擁護", lead: "自立支援医療、補装具、年金・手当、成年後見、虐待防止・差別解消・雇用、権利条約。", body: [
+  ["h", "医療と用具"],
+  ["m", "障害福祉サービス以外の制度も押さえたいわ。"],
+  ["z", "まず「自立支援医療」なのだ。18歳以上の身体障害者の更生医療、18歳未満の育成医療(どちらも市町村)、精神通院医療(都道府県)の3つで、自己負担は原則1割なのだ。"],
+  ["z", "用具は2本立てなのだ。義肢・車いす・補聴器などの「補装具」は自立支援給付で、購入・修理に加えて2018年から借受けもできるのだ。特殊寝台やストマ装具などの「日常生活用具」は地域生活支援事業で市町村が給付するのだ。"],
+  ["h", "お金と権利を守る制度"],
+  ["m", "生活費の支援は?"],
+  ["z", "年金は「障害基礎年金」が1級・2級、「障害厚生年金」が1〜3級なのだ。手当は、20歳以上で在宅の重度障害者に「特別障害者手当」、20歳未満には「障害児福祉手当」があるのだ。"],
+  ["z", "判断能力が不十分な人には「成年後見制度」(後見・保佐・補助と任意後見)と、社会福祉協議会が福祉サービスの利用援助や日常的な金銭管理をする「日常生活自立支援事業」があるのだ。申立て費用の助成は、地域生活支援事業の成年後見制度利用支援事業なのだ。"],
+  ["h", "虐待・差別・雇用"],
+  ["m", "権利擁護の法律も確認しておきましょう。"],
+  ["t", ["法律", "施行", "要点"], [["障害者虐待防止法", "2012年10月", "身体的・性的・心理的・放棄放置・経済的の5類型。養護者・施設従事者等・使用者による虐待。発見者に通報義務、通報先は市町村"], ["障害者差別解消法", "2016年4月", "不当な差別的取扱いの禁止と合理的配慮の提供。2024年4月から事業者も合理的配慮が義務"], ["障害者雇用促進法", "ー", "法定雇用率。算定基礎に精神障害者を追加(2018年)。民間2.5%(2024年4月)、2.7%(2026年7月)"]]],
+  ["m", "国際的な流れもあるのよね。"],
+  ["z", "障害者権利条約なのだ。2006年に国連で採択され、日本は基本法改正(2011年)・総合支援法・差別解消法を整えたうえで2014年に批准したのだ。2022年には初の総括所見で、脱施設化やインクルーシブ教育の推進が勧告されたのだ。"],
+  ["z", "地域の受け皿としては「地域生活支援拠点等」なのだ。緊急時の受け入れ、体験の機会、相談、専門的人材、地域の体制づくりの5つの機能で、2024年改正で市町村の整備が努力義務になったのだ。"],
+  ["s", ["自立支援医療は3種類。更生・育成は市町村、精神通院は都道府県", "補装具(借受けは2018年から)と日常生活用具(地域生活支援事業)を区別", "障害基礎年金は1・2級。特別障害者手当は20歳以上", "虐待5類型。差別解消法の合理的配慮は事業者も義務(2024年4月)", "権利条約の批准は2014年。地域生活支援拠点等は整備が努力義務"]]
+]}
+];
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let cur = 0;
+
+function renderNav() {
+  $("chapters").innerHTML = CH.map((c, i) => `<button type="button" class="chip${i === cur ? " on" : ""}" data-i="${i}" aria-current="${i === cur ? "page" : "false"}">第${i + 1}章 ${c.title}</button>`).join("");
+  $("chapters").querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => go(Number(b.dataset.i))));
+}
+function line(l) {
+  const [t] = l;
+  if (t === "m" || t === "z") { const who = t === "m" ? "四国めたん" : "ずんだもん"; const av = t === "m" ? "め" : "ず"; return `<div class="line ${t}"><span class="av ${t}" aria-hidden="true">${av}</span><div class="bubble"><span class="who">${who}</span>${esc(l[1])}</div></div>`; }
+  if (t === "h") return `<h3>${esc(l[1])}</h3>`;
+  if (t === "p") return `<div class="point"><b>${esc(l[1])}</b><ul>${l[2].map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`;
+  if (t === "s") return `<div class="point sum"><b>この章のまとめ</b><ul>${l[1].map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`;
+  if (t === "t") return `<div class="tbl"><table><thead><tr>${l[1].map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${l[2].map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  return "";
+}
+function renderChapter() {
+  const c = CH[cur]; const n = cur + 1;
+  const prev = cur > 0 ? `<a class="btn secondary" href="#ch${cur}">← 第${cur}章</a>` : `<span></span>`;
+  const next = cur < CH.length - 1 ? `<a class="btn secondary" href="#ch${cur + 2}">第${cur + 2}章 →</a>` : `<a class="btn secondary" href="${DRILL}">全80問のドリルへ</a>`;
+  $("chapter").innerHTML = `
+    <div class="chead"><span class="tag tag-blue">第${n}章 / 全${CH.length}章</span><h2>${esc(c.title)}</h2><p class="lead">${esc(c.lead)}</p></div>
+    ${c.body.map(line).join("")}
+    <div class="actions">
+      <a class="btn primary" href="${DRILL}#s${n}">第${n}章の確認ドリルを解く</a>
+      <div class="nav">${prev}${next}</div>
+    </div>`;
+  document.title = `第${n}章 ${c.title} | ずんだもんと学ぶ障害福祉サービス`;
+}
+function go(i) { cur = i; history.replaceState(null, "", `#ch${i + 1}`); renderNav(); renderChapter(); window.scrollTo({ top: $("chapters").offsetTop - 12, behavior: "smooth" }); }
+function fromHash() { const m = /^#ch([1-7])$/.exec(location.hash || ""); cur = m ? Number(m[1]) - 1 : 0; renderNav(); renderChapter(); }
+window.addEventListener("hashchange", fromHash);
+fromHash();
+</script>
+</body>
+</html>

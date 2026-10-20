@@ -1,5 +1,8 @@
-# 障害福祉サービス確認テスト
+# 福祉ドリル
 
-『図解でわかる障害福祉サービス』の内容を確認する選択式テスト(7分野・80問、解説つき)。
+『図解でわかる障害福祉サービス』の内容を学ぶためのWeb教材とドリルです。
 
-公開ページ: https://byson2562.github.io/shogai-fukushi-drill/
+- 確認ドリル(7分野・80問、解説つき): https://byson2562.github.io/shogai-fukushi-drill/
+- ずんだもんと学ぶ障害福祉サービス(7章の会話形式の教材): https://byson2562.github.io/shogai-fukushi-drill/learn.html
+
+ずんだもん・四国めたんは SSS合同会社のキャラクターです。名前と口調のみを使用しています。
