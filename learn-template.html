@@ -38,8 +38,14 @@ h1 { font-size: 28px; line-height: 1.4; }
 .castcard { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; min-width: 0; }
 .castcard b { font-size: 14px; display: block; }
 .castcard small { font-size: 12px; color: var(--sub); display: block; line-height: 1.6; }
-.av { width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 18px; flex: 0 0 auto; }
-.av.z { background: var(--zunda); } .av.m { background: var(--metan); }
+.av { width: 44px; height: 44px; border-radius: 22px; display: block; flex: 0 0 auto; object-fit: cover; background: #fff; border: 2px solid var(--line); }
+.av.z { border-color: var(--zunda); } .av.m { border-color: var(--metan); }
+.castcard .av { width: 60px; height: 60px; border-radius: 30px; }
+.stage { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.stage .title { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.stage .chars { display: flex; align-items: flex-end; gap: 4px; flex: 0 0 auto; }
+.stage .chars img { height: 170px; width: auto; display: block; }
+@media (max-width: 560px) { .stage { flex-direction: column; align-items: stretch; } .stage .chars { justify-content: center; } .stage .chars img { height: 140px; } }
 .chapters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
 .chip { flex: 0 0 auto; min-height: 40px; padding: 0 14px; border: 2px solid var(--line); border-radius: 9999px; background: var(--bg); color: var(--sub); font-size: 13px; font-weight: 700; white-space: nowrap; }
 .chip.on { border-color: var(--primary); background: var(--blue-bg); color: var(--blue-text); }
@@ -95,19 +101,22 @@ footer p { margin: 0; }
 <body>
 <div class="wrap">
   <div class="brand"><span>福祉ドリル</span><a href="./">確認ドリルへ</a></div>
-  <div>
-    <h1>ずんだもんと学ぶ<br>障害福祉サービス</h1>
-    <p class="lead">『図解でわかる障害福祉サービス』の主要テーマを、相談支援事業所に入った新人のずんだもんと先輩のめたんの対話で読み解きます。利用者の餅田さんの「一人暮らしをしたい」「働きたい」という相談を軸に、7つの章で制度を一周し、付録に年表と用語集を置きました。各章の最後から、その章の確認ドリルに進めます。</p>
+  <div class="stage">
+    <div class="title">
+      <h1>ずんだもんと学ぶ<br>障害福祉サービス</h1>
+      <p class="lead">『図解でわかる障害福祉サービス』の主要テーマを、相談支援事業所に入った新人のずんだもんと先輩のめたんの対話で読み解きます。利用者の餅田さんの「一人暮らしをしたい」「働きたい」という相談を軸に、7つの章で制度を一周し、付録に年表と用語集を置きました。各章の最後から、その章の確認ドリルに進めます。</p>
+    </div>
+    <div class="chars" aria-hidden="true"><img src="assets/zunda_idea.png" alt="" width="191" height="360"><img src="assets/metan_point.png" alt="" width="175" height="360"></div>
   </div>
   <div class="cast">
-    <div class="castcard"><span class="av z">ず</span><span><b>ずんだもん</b><small>ずんだ市の相談支援事業所「ずんだ相談室」に入職して半年。社会福祉士の受験勉強中。利用者さんと話すのは好きだが、制度の名前が頭の中でつながっていない。</small></span></div>
-    <div class="castcard"><span class="av m">め</span><span><b>四国めたん</b><small>ずんだ相談室の先輩で相談支援専門員。実務10年。ずんだもんの指導係。</small></span></div>
+    <div class="castcard"><img class="av z" src="assets/zunda_normal_bust.png" alt="ずんだもん" width="60" height="60"><span><b>ずんだもん</b><small>ずんだ市の相談支援事業所「ずんだ相談室」に入職して半年。社会福祉士の受験勉強中。利用者さんと話すのは好きだが、制度の名前が頭の中でつながっていない。</small></span></div>
+    <div class="castcard"><img class="av m" src="assets/metan_normal_bust.png" alt="四国めたん" width="60" height="60"><span><b>四国めたん</b><small>ずんだ相談室の先輩で相談支援専門員。実務10年。ずんだもんの指導係。</small></span></div>
   </div>
   <nav class="chapters" id="chapters" aria-label="章の選択"></nav>
   <main class="chapter" id="chapter"></main>
   <footer>
     <p>内容は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。手元の版と異なる記述があれば、本の記載を優先してください。登場する利用者や事業所は架空のものです。</p>
-    <p>ずんだもん・四国めたんは SSS合同会社のキャラクターです。公式のキャラクター利用ガイドラインに従って、名前と口調のみを使用しています。</p>
+    <p>ずんだもん・四国めたんは SSS合同会社のキャラクターです。公式のキャラクター利用ガイドラインに従って使用しています。立ち絵：坂本アヒル（ずんだもん立ち絵素材2.3、四国めたん立ち絵素材2.1）。</p>
   </footer>
 </div>
 

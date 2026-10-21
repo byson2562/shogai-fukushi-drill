@@ -14,8 +14,20 @@ TEMPLATE = ROOT / "learn-template.html"
 OUT = ROOT / "learn.html"
 
 SPEAKERS = {"ずんだもん": "z", "めたん": "m", "四国めたん": "m"}
-AV = {"z": "ず", "m": "め"}
 NAME = {"z": "ずんだもん", "m": "四国めたん"}
+
+def face(who, text):
+    """Pick a bust image (assets/*_bust.png) from the line's content."""
+    if who == "z":
+        if re.search(r"(わかった|なるほど|できた|できるようになった|楽しみ|やったー|合格|見事|覚えたのだ|言えるようになった)", text): return "zunda_happy"
+        if re.search(r"(困|不安|心配|わからない|あやふや|ごちゃごちゃ|覚えきれない|追いつかない|嫌な予感)", text): return "zunda_trouble"
+        if "？" in text or "?" in text: return "zunda_think"
+        if re.search(r"(つまり|ということは|じゃあ|なのだ。$)", text) and len(text) > 60: return "zunda_idea"
+        return "zunda_normal"
+    if re.search(r"(注意|誤り|ダメ|間違|引っかけ|入れ替えた|混ぜられ|気をつけ)", text): return "metan_warn"
+    if re.search(r"(完璧|合格|お疲れさま|見事|正解です|安心)", text): return "metan_smile"
+    if re.search(r"(^|[。、])(では|まず|流れ|整理|表で|3つ|2つ|ポイント)", text) or len(text) > 120: return "metan_point"
+    return "metan_normal"
 
 def esc(s):
     return html.escape(s, quote=False)
@@ -81,7 +93,7 @@ def convert(md):
         d = re.match(r"^\*\*(ずんだもん|四国めたん|めたん)\*\*[：:]\s*(.*)$", ln)
         if d:
             who = SPEAKERS[d.group(1)]
-            out.append(f"<div class=\"line {who}\"><span class=\"av {who}\" aria-hidden=\"true\">{AV[who]}</span><div class=\"bubble\"><span class=\"who\">{NAME[who]}</span>{inline(d.group(2))}</div></div>")
+            out.append(f"<div class=\"line {who}\"><img class=\"av {who}\" src=\"assets/{face(who, d.group(2))}_bust.png\" alt=\"\" width=\"44\" height=\"44\" loading=\"lazy\"><div class=\"bubble\"><span class=\"who\">{NAME[who]}</span>{inline(d.group(2))}</div></div>")
             i += 1; continue
         if ln.lstrip().startswith("|"):
             buf = []
