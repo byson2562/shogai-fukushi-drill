@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ずんだもんと学ぶ障害福祉サービス</title>
+<meta name="description" content="『図解でわかる障害福祉サービス』の主要テーマを、新人職員ずんだもんと先輩めたんの対話で読み解く7章＋付録のWeb教材。利用者の餅田さんの相談を軸に制度を一周する。">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
+<style>
+/* Layout: one 720px reading column. Chapter pills on top, long-form dialogue (ずんだもん left / めたん right) with headings, tables, lists and コラム boxes between; drill link at the end. Tokens follow Ubie Vitals. */
+:root {
+  --bg: #ffffff; --bg-2: #fafafa; --bg-3: #f6f6f6; --fg: #32353a; --sub: #686a6d; --line: #dcdddd; --line-2: #c5c6c7;
+  --primary: #3959cc; --primary-hover: #304cad; --blue-text: #283f91; --blue-bg: #f0f2fc;
+  --green: #1c9167; --green-border: #77dfba; --green-bg: #e9faf4; --zunda: #27cc91;
+  --pink: #9b2350; --pink-border: #efa6c2; --pink-bg: #fcf0f5; --metan: #e1568a;
+  --orange: #b57212; --orange-bg: #fff9f0;
+  --font: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #16191f; --bg-2: #1f2329; --bg-3: #272b32; --fg: #f6f6f6; --sub: #c5c6c7; --line: #393c41; --line-2: #55575b;
+    --primary: #8296df; --primary-hover: #aab8e9; --blue-text: #cfd7f3; --blue-bg: #203374; --green: #77dfba; --green-border: #21ad7b; --green-bg: #125c41;
+    --pink: #efa6c2; --pink-border: #b92a5f; --pink-bg: #621632; --orange: #ffd79d; --orange-bg: #73480c; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.8; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+[hidden] { display: none !important; }
+a { color: var(--primary); }
+button { font: inherit; cursor: pointer; color: inherit; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; font-weight: 700; line-height: 1.5; }
+.wrap { max-width: 720px; margin: 0 auto; padding-block: 40px 48px; display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.brand { font-size: 14px; font-weight: 700; color: var(--sub); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.brand a { font-weight: 700; font-size: 13px; text-decoration: none; }
+h1 { font-size: 28px; line-height: 1.4; }
+.lead { margin: 0; font-size: 14px; color: var(--sub); line-height: 1.7; }
+.cast { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.castcard { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 2px solid var(--line); border-radius: 12px; min-width: 0; }
+.castcard b { font-size: 14px; display: block; }
+.castcard small { font-size: 12px; color: var(--sub); display: block; line-height: 1.6; }
+.av { width: 44px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 18px; flex: 0 0 auto; }
+.av.z { background: var(--zunda); } .av.m { background: var(--metan); }
+.chapters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.chip { flex: 0 0 auto; min-height: 40px; padding: 0 14px; border: 2px solid var(--line); border-radius: 9999px; background: var(--bg); color: var(--sub); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.chip.on { border-color: var(--primary); background: var(--blue-bg); color: var(--blue-text); }
+.tag { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 9999px; font-size: 12px; font-weight: 700; white-space: nowrap; line-height: 1.5; }
+.tag-blue { background: var(--blue-bg); color: var(--blue-text); }
+
+/* chapter body (prose) */
+.chapter { display: flex; flex-direction: column; gap: 16px; }
+.chead { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.chead .tag { align-self: flex-start; }
+.chapter h1.ct { font-size: 26px; }
+.chapter h2 { font-size: 19px; color: var(--blue-text); border-top: 2px solid var(--line); padding-top: 18px; margin-top: 12px; }
+.chapter h3 { font-size: 16px; margin-top: 4px; }
+.chapter p { margin: 0; }
+.chapter ul, .chapter ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; }
+.chapter li { padding-left: 2px; }
+.chapter blockquote { margin: 0; padding: 10px 16px; border-left: 4px solid var(--primary); background: var(--blue-bg); border-radius: 0 12px 12px 0; font-weight: 700; color: var(--blue-text); }
+.chapter code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 0.92em; background: var(--bg-3); padding: 1px 5px; border-radius: 4px; }
+.msg { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--sub); }
+.line { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: flex-start; }
+.line.m { grid-template-columns: 1fr 40px; }
+.line.m .av { grid-column: 2; grid-row: 1; }
+.line.m .bubble { grid-column: 1; grid-row: 1; }
+.line .av { width: 40px; height: 40px; border-radius: 20px; font-size: 16px; }
+.bubble { padding: 10px 14px; border-radius: 12px; font-size: 15.5px; line-height: 1.8; min-width: 0; }
+.line.z .bubble { background: var(--green-bg); border: 1.5px solid var(--green-border); border-top-left-radius: 4px; }
+.line.m .bubble { background: var(--pink-bg); border: 1.5px solid var(--pink-border); border-top-right-radius: 4px; }
+.bubble .who { display: block; font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+.line.z .who { color: var(--green); } .line.m .who { color: var(--pink); }
+.column { border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--bg-2); font-size: 14.5px; }
+.column-title { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.tbl { overflow-x: auto; border: 2px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 460px; line-height: 1.6; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--bg-2); color: var(--sub); font-size: 12px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 700; }
+.actions { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.btn { width: 100%; min-height: 56px; border: 0; border-radius: 9999px; font-size: 16px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px; text-decoration: none; }
+.btn.primary { background: var(--primary); color: #fff; }
+.btn.primary:hover { background: var(--primary-hover); }
+.btn.secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); min-height: 52px; font-size: 15px; }
+.check { border: 2px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.check h2 { border: 0; padding: 0; margin: 0; }
+.check p { font-size: 14px; color: var(--sub); }
+.nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.nav .btn { min-height: 48px; font-size: 14px; }
+footer { font-size: 12px; color: var(--sub); border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-direction: column; gap: 4px; line-height: 1.7; }
+footer p { margin: 0; }
+@media (max-width: 480px) { .cast { grid-template-columns: 1fr; } .bubble { font-size: 15px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span>福祉ドリル</span><a href="./">確認ドリルへ</a></div>
+  <div>
+    <h1>ずんだもんと学ぶ<br>障害福祉サービス</h1>
+    <p class="lead">『図解でわかる障害福祉サービス』の主要テーマを、相談支援事業所に入った新人のずんだもんと先輩のめたんの対話で読み解きます。利用者の餅田さんの「一人暮らしをしたい」「働きたい」という相談を軸に、7つの章で制度を一周し、付録に年表と用語集を置きました。各章の最後から、その章の確認ドリルに進めます。</p>
+  </div>
+  <div class="cast">
+    <div class="castcard"><span class="av z">ず</span><span><b>ずんだもん</b><small>ずんだ市の相談支援事業所「ずんだ相談室」に入職して半年。社会福祉士の受験勉強中。利用者さんと話すのは好きだが、制度の名前が頭の中でつながっていない。</small></span></div>
+    <div class="castcard"><span class="av m">め</span><span><b>四国めたん</b><small>ずんだ相談室の先輩で相談支援専門員。実務10年。ずんだもんの指導係。</small></span></div>
+  </div>
+  <nav class="chapters" id="chapters" aria-label="章の選択"></nav>
+  <main class="chapter" id="chapter"></main>
+  <footer>
+    <p>内容は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。手元の版と異なる記述があれば、本の記載を優先してください。登場する利用者や事業所は架空のものです。</p>
+    <p>ずんだもん・四国めたんは SSS合同会社のキャラクターです。公式のキャラクター利用ガイドラインに従って、名前と口調のみを使用しています。</p>
+  </footer>
+</div>
+
+<script>
+const DRILL = "./";
+/*__CHAPTERS__*/
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let cur = 0;
+const label = (i) => CH[i].appendix ? "付録" : `${i + 1}章`;
+
+function renderNav() {
+  $("chapters").innerHTML = CH.map((c, i) => `<button type="button" class="chip${i === cur ? " on" : ""}" data-i="${i}" aria-current="${i === cur ? "page" : "false"}">${c.appendix ? "付録" : esc(c.title.replace(/\s+/g, " "))}</button>`).join("");
+  $("chapters").querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => go(Number(b.dataset.i))));
+}
+function renderChapter() {
+  const c = CH[cur]; const n = cur + 1;
+  const prev = cur > 0 ? `<a class="btn secondary" href="#ch${cur}">← ${label(cur - 1)}</a>` : `<span></span>`;
+  const next = cur < CH.length - 1 ? `<a class="btn secondary" href="#ch${cur + 2}">${label(cur + 1)} →</a>` : `<a class="btn secondary" href="${DRILL}">全80問のドリルへ</a>`;
+  const check = c.appendix
+    ? `<div class="check"><h2>総仕上げ</h2><p>付録まで読み終えたら、全80問のドリルで仕上げをどうぞ。間違えた問題だけをやり直すモードもあります。</p><a class="btn primary" href="${DRILL}">全80問のドリルを解く</a></div>`
+    : `<div class="check"><h2>理解度チェック</h2><p>この章の内容を確認するドリルです。1問ごとに解説が出て、最後に分野別の正答率が表示されます。</p><a class="btn primary" href="${DRILL}#s${n}">${n}章の確認ドリルを解く</a></div>`;
+  $("chapter").innerHTML = `
+    <div class="chead"><span class="tag tag-blue">${c.appendix ? "付録" : `第${n}章 / 全${CH.filter((x) => !x.appendix).length}章`}</span><h1 class="ct">${esc(c.title)}</h1></div>
+    ${c.html}
+    ${check}
+    <div class="actions"><div class="nav">${prev}${next}</div></div>`;
+  document.title = `${c.title} | ずんだもんと学ぶ障害福祉サービス`;
+}
+function go(i) { cur = i; history.replaceState(null, "", `#ch${i + 1}`); renderNav(); renderChapter(); window.scrollTo({ top: $("chapters").offsetTop - 12, behavior: "smooth" }); }
+function fromHash() { const m = /^#ch([1-9])$/.exec(location.hash || ""); const i = m ? Number(m[1]) - 1 : 0; cur = i < CH.length ? i : 0; renderNav(); renderChapter(); }
+window.addEventListener("hashchange", fromHash);
+fromHash();
+</script>
+</body>
+</html>
