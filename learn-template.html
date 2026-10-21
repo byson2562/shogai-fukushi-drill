@@ -102,11 +102,11 @@ footer p { margin: 0; }
 </head>
 <body>
 <div class="wrap">
-  <nav class="sitenav" aria-label="ページ"><a href="learn.html" aria-current="page">ずんだもんと学ぶ教材</a><a href="./">確認ドリル</a></nav>
+  <nav class="sitenav" aria-label="ページ"><a href="learn.html" aria-current="page">ずんだもんと学ぶ教材</a><a href="./">問題集</a></nav>
   <div class="stage">
     <div class="title">
       <h1>ずんだもんと学ぶ<br>障害福祉サービス</h1>
-      <p class="lead">『図解でわかる障害福祉サービス』の主要テーマを、相談支援事業所に入った新人のずんだもんと先輩のめたんの対話で読み解きます。利用者の餅田さんの「一人暮らしをしたい」「働きたい」という相談を軸に、7つの章で制度を一周し、付録に年表と用語集を置きました。各章の最後から、その章の確認ドリルに進めます。</p>
+      <p class="lead">『図解でわかる障害福祉サービス』の主要テーマを、相談支援事業所に入った新人のずんだもんと先輩のめたんの対話で読み解きます。利用者の餅田さんの「一人暮らしをしたい」「働きたい」という相談を軸に、7つの章で制度を一周し、付録に年表と用語集を置きました。各章の最後から、その章の問題集に進めます。</p>
     </div>
     <div class="chars" aria-hidden="true"><img src="assets/zunda_idea.png" alt="" width="191" height="360"><img src="assets/metan_point.png" alt="" width="175" height="360"></div>
   </div>
@@ -138,10 +138,10 @@ function renderNav() {
 function renderChapter() {
   const c = CH[cur]; const n = cur + 1;
   const prev = cur > 0 ? `<a class="btn secondary" href="#ch${cur}">← ${label(cur - 1)}</a>` : `<span></span>`;
-  const next = cur < CH.length - 1 ? `<a class="btn secondary" href="#ch${cur + 2}">${label(cur + 1)} →</a>` : `<a class="btn secondary" href="${DRILL}">全80問のドリルへ</a>`;
+  const next = cur < CH.length - 1 ? `<a class="btn secondary" href="#ch${cur + 2}">${label(cur + 1)} →</a>` : `<a class="btn secondary" href="${DRILL}">全80問の問題集へ</a>`;
   const check = c.appendix
-    ? `<div class="check"><h2>総仕上げ</h2><p>付録まで読み終えたら、全80問のドリルで仕上げをどうぞ。間違えた問題だけをやり直すモードもあります。</p><a class="btn primary" href="${DRILL}">全80問のドリルを解く</a></div>`
-    : `<div class="check"><h2>理解度チェック</h2><p>この章の内容を確認するドリルです。1問ごとに解説が出て、最後に分野別の正答率が表示されます。</p><a class="btn primary" href="${DRILL}#s${n}">${n}章の確認ドリルを解く</a></div>`;
+    ? `<div class="check"><h2>総仕上げ</h2><p>付録まで読み終えたら、全80問の問題集で仕上げをどうぞ。間違えた問題だけをやり直すモードもあります。</p><a class="btn primary" href="${DRILL}">全80問の問題集を解く</a></div>`
+    : `<div class="check"><h2>理解度チェック</h2><p>この章の内容を確認する問題集です。1問ごとに解説が出て、最後に分野別の正答率が表示されます。</p><a class="btn primary" href="${DRILL}#s${n}">${n}章の問題集を解く</a></div>`;
   $("chapter").innerHTML = `
     <div class="chead"><span class="tag tag-blue">${c.appendix ? "付録" : `第${n}章 / 全${CH.filter((x) => !x.appendix).length}章`}</span><h1 class="ct">${esc(c.title)}</h1></div>
     ${c.html}
