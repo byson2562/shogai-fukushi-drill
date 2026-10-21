@@ -149,10 +149,11 @@ function renderChapter() {
     <div class="actions"><div class="nav">${prev}${next}</div></div>`;
   document.title = `${c.title} | ずんだもんと学ぶ障害福祉サービス`;
 }
-function go(i) { cur = i; history.replaceState(null, "", `#ch${i + 1}`); renderNav(); renderChapter(); window.scrollTo({ top: $("chapters").offsetTop - 12, behavior: "smooth" }); }
-function fromHash() { const m = /^#ch([1-9])$/.exec(location.hash || ""); const i = m ? Number(m[1]) - 1 : 0; cur = i < CH.length ? i : 0; renderNav(); renderChapter(); }
-window.addEventListener("hashchange", fromHash);
-fromHash();
+function scrollToChapter() { window.scrollTo({ top: $("chapters").offsetTop - 12, behavior: "auto" }); }
+function go(i) { cur = i; history.replaceState(null, "", `#ch${i + 1}`); renderNav(); renderChapter(); scrollToChapter(); }
+function fromHash(scroll) { const m = /^#ch([1-9])$/.exec(location.hash || ""); const i = m ? Number(m[1]) - 1 : 0; cur = i < CH.length ? i : 0; renderNav(); renderChapter(); if (scroll) scrollToChapter(); }
+window.addEventListener("hashchange", () => fromHash(true));
+fromHash(false);
 </script>
 </body>
 </html>
