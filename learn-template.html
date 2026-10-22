@@ -7,7 +7,7 @@
 <meta name="description" content="『図解でわかる障害福祉サービス』の主要テーマを、新人職員ずんだもんと先輩めたんの対話で読み解く7章＋付録のWeb教材。利用者の餅田さんの相談を軸に制度を一周する。">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
 <style>
-/* Layout: one 720px reading column. Chapter pills on top, long-form dialogue (ずんだもん left / めたん right) with headings, tables, lists and コラム boxes between; drill link at the end. Tokens follow Ubie Vitals. */
+/* Layout: one 720px reading column. Chapter pills on top, long-form dialogue in script style (colored name + thin left rule per speaker) with headings, tables, lists and コラム boxes between; drill link at the end. Tokens follow Ubie Vitals. */
 :root {
   --bg: #ffffff; --bg-2: #fafafa; --bg-3: #f6f6f6; --fg: #32353a; --sub: #686a6d; --line: #dcdddd; --line-2: #c5c6c7;
   --primary: #3959cc; --primary-hover: #304cad; --blue-text: #283f91; --blue-bg: #f0f2fc;
@@ -63,16 +63,10 @@ h1 { font-size: 28px; line-height: 1.4; }
 .chapter blockquote { margin: 0; padding: 10px 16px; border-left: 4px solid var(--primary); background: var(--blue-bg); border-radius: 0 12px 12px 0; font-weight: 700; color: var(--blue-text); }
 .chapter code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 0.92em; background: var(--bg-3); padding: 1px 5px; border-radius: 4px; }
 .msg { background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--sub); }
-.line { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: flex-start; }
-.line.m { grid-template-columns: 1fr 40px; }
-.line.m .av { grid-column: 2; grid-row: 1; }
-.line.m .bubble { grid-column: 1; grid-row: 1; }
-.line .av { width: 40px; height: 40px; border-radius: 20px; font-size: 16px; }
-.bubble { padding: 10px 14px; border-radius: 12px; font-size: 15.5px; line-height: 1.8; min-width: 0; }
-.line.z .bubble { background: var(--green-bg); border: 1.5px solid var(--green-border); border-top-left-radius: 4px; }
-.line.m .bubble { background: var(--pink-bg); border: 1.5px solid var(--pink-border); border-top-right-radius: 4px; }
-.bubble .who { display: block; font-size: 11px; font-weight: 700; margin-bottom: 2px; }
-.line.z .who { color: var(--green); } .line.m .who { color: var(--pink); }
+.line { padding-left: 14px; border-left: 3px solid var(--green-border); }
+.line.m { border-left-color: var(--pink-border); }
+.line .who { font-size: 14px; font-weight: 700; margin-right: 0.6em; color: var(--green); }
+.line.m .who { color: var(--pink); }
 .column { border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--bg-2); font-size: 14.5px; }
 .column-title { display: flex; align-items: center; gap: 8px; font-weight: 700; }
 .tbl { overflow-x: auto; border: 2px solid var(--line); border-radius: 12px; }
@@ -97,7 +91,7 @@ td:first-child { font-weight: 700; }
 .sitenav a:hover:not([aria-current="page"]) { color: var(--fg); }
 footer { font-size: 12px; color: var(--sub); border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-direction: column; gap: 4px; line-height: 1.7; }
 footer p { margin: 0; }
-@media (max-width: 480px) { .cast { grid-template-columns: 1fr; } .bubble { font-size: 15px; } }
+@media (max-width: 480px) { .cast { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
