@@ -182,7 +182,7 @@ h1, h2 { margin: 0; text-wrap: balance; font-weight: 700; }
   <nav class="sitenav" aria-label="ページ"><a href="https://byson2562.github.io/shogai-fukushi-drill/learn.html">ずんだもんと学ぶ教材</a><a href="./" aria-current="page">問題集</a></nav>
   <div class="hero">
     <h1>障害福祉サービス<br>問題集</h1>
-    <p class="lead">『図解でわかる障害福祉サービス』の主要テーマから80問。1問ごとに解説が出ます。</p>
+    <p class="lead">障害福祉サービスの制度の基本から80問。1問ごとに解説が出ます。</p>
     <span class="tag tag-pink" id="best" hidden></span>
   </div>
   <div class="modes" role="tablist" aria-label="出題モード">
@@ -199,7 +199,7 @@ h1, h2 { margin: 0; text-wrap: balance; font-weight: 700; }
     <button type="button" class="btn primary" id="startBtn">問題集を始める</button>
     <span class="note" id="startInfo"></span>
   </div>
-  <p class="note">数字や制度名は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。手元の版と異なる記述があれば、本の記載を優先して読み比べてください。</p>
+  <p class="note">数字や制度名は2024年4月施行の改正法と2025年10月施行の就労選択支援まで反映しています。制度は改正や自治体によって変わるため、実務では厚生労働省や市町村の最新の案内を確認してください。</p>
 </section>
 
 <section class="screen" id="quiz" hidden>
@@ -659,7 +659,7 @@ function renderResult() {
   const delta = $("delta");
   if (prev && prev.v === QV && prev.mode === state.mode && prev.n === n) { const d = c - prev.c; delta.hidden = false; delta.className = "tag " + (d >= 0 ? "tag-green" : "tag-orange"); delta.textContent = d === 0 ? "前回と同じ" : `前回より ${d > 0 ? "+" : ""}${d}問`; }
   else delta.hidden = true;
-  $("comment").textContent = n < state.order.length ? `${state.order.length}問中${n}問に回答しました。` : pct >= 90 ? "制度の全体像から細かな要件まで、しっかり理解できています。" : pct >= 70 ? "主要な仕組みは押さえられています。要復習の分野を本で読み直すと定着します。" : pct >= 50 ? "基本は理解できていますが、サービスごとの対象や数字の違いが曖昧なようです。要復習の分野から見直しましょう。" : "まずは制度の全体像と利用手続きの章から読み直し、サービスの分類を整理すると得点が伸びます。";
+  $("comment").textContent = n < state.order.length ? `${state.order.length}問中${n}問に回答しました。` : pct >= 90 ? "制度の全体像から細かな要件まで、しっかり理解できています。" : pct >= 70 ? "主要な仕組みは押さえられています。要復習の分野を教材で読み直すと定着します。" : pct >= 50 ? "基本は理解できていますが、サービスごとの対象や数字の違いが曖昧なようです。要復習の分野から見直しましょう。" : "まずは制度の全体像と利用手続きの章から読み直し、サービスの分類を整理すると得点が伸びます。";
 
   const weak = [], strong = [];
   SECTIONS.forEach((name, s) => {
