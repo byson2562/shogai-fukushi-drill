@@ -7,7 +7,7 @@
 <meta name="description" content="障害福祉サービスの制度の基本を、新人職員ずんだもんと先輩めたんの対話で学ぶ7章＋付録のWeb教材。利用者の餅田さんの相談を軸に制度を一周する。">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
 <style>
-/* Layout: one 720px reading column. Chapter pills on top, long-form dialogue in script style (colored name + thin left rule per speaker) with headings, tables, lists and コラム boxes between; drill link at the end. Tokens follow Ubie Vitals. */
+/* Layout: one 720px reading column. Chapter pills on top, long-form dialogue in script style (colored name + thin left rule per speaker) with headings, tables, lists and コラム boxes between; a self-scored 理解度チェック (7 questions) closes each chapter. Tokens follow Ubie Vitals. */
 :root {
   --bg: #ffffff; --bg-2: #fafafa; --bg-3: #f6f6f6; --fg: #32353a; --sub: #686a6d; --line: #dcdddd; --line-2: #c5c6c7;
   --primary: #3959cc; --primary-hover: #304cad; --blue-text: #283f91; --blue-bg: #f0f2fc;
@@ -23,6 +23,7 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px; line-height: 1.8; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 [hidden] { display: none !important; }
 a { color: var(--primary); }
@@ -80,9 +81,43 @@ td:first-child { font-weight: 700; }
 .btn.primary { background: var(--primary); color: #fff; }
 .btn.primary:hover { background: var(--primary-hover); }
 .btn.secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); min-height: 52px; font-size: 15px; }
-.check { border: 2px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-.check h2 { border: 0; padding: 0; margin: 0; }
-.check p { font-size: 14px; color: var(--sub); }
+.chapter h2[id] { scroll-margin-top: 16px; }
+/* chapter-end check */
+.quiz { display: flex; flex-direction: column; gap: 14px; }
+.quiz .note { font-size: 14px; color: var(--sub); }
+.quiz .note a { margin-left: 0.5em; }
+.qcard { border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.qhead { display: flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 700; color: var(--sub); }
+.qtext { font-weight: 700; }
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opts.tf { flex-direction: row; }
+.opt { text-align: left; min-height: 48px; padding: 10px 14px; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); line-height: 1.6; }
+.opts.tf .opt { flex: 1; text-align: center; font-size: 20px; font-weight: 700; }
+.opt:hover:not(:disabled) { border-color: var(--primary); }
+.opt:disabled { cursor: default; color: var(--fg); }
+.opt.is-answer { border-color: var(--green); background: var(--green-bg); }
+.opt.is-wrong { border-color: var(--pink); background: var(--pink-bg); }
+.fillrow { display: flex; gap: 8px; }
+.fillrow input, .quiz textarea { flex: 1; min-width: 0; font: inherit; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); padding: 8px 12px; }
+.fillrow input { min-height: 48px; }
+.fillrow input.is-correct { border-color: var(--green); } .fillrow input.is-wrong { border-color: var(--pink); }
+.quiz textarea { width: 100%; resize: vertical; line-height: 1.7; }
+.qbtn { align-self: flex-start; min-height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; background: var(--primary); color: #fff; font-weight: 700; white-space: nowrap; }
+.qbtn:hover:not(:disabled) { background: var(--primary-hover); }
+.qbtn:disabled { opacity: 0.45; cursor: default; }
+.explain { border-left: 4px solid var(--line-2); background: var(--bg-2); border-radius: 0 10px 10px 0; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; }
+.explain.ok { border-left-color: var(--green); } .explain.ng { border-left-color: var(--pink); }
+.explain .verdict { font-weight: 700; }
+.explain.ok .verdict { color: var(--green); } .explain.ng .verdict { color: var(--pink); }
+.reflink { align-self: flex-start; background: none; border: 0; padding: 4px 0; color: var(--primary); font-size: 14px; text-decoration: underline; }
+.model-title, .points-title { font-weight: 700; font-size: 14px; }
+.points { display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; }
+.points label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
+.points input { margin-top: 0.45em; flex: 0 0 auto; }
+.qresult { border: 2px solid var(--primary); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.qresult .score { font-size: 22px; font-weight: 700; color: var(--blue-text); }
+.qresult .btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.qresult .btns .btn { width: auto; min-height: 48px; font-size: 14px; }
 .nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .nav .btn { min-height: 48px; font-size: 14px; }
 .sitenav { display: flex; gap: 6px; padding: 4px; background: var(--bg-3); border-radius: 9999px; align-self: center; margin: 0 auto; }
@@ -100,7 +135,7 @@ footer p { margin: 0; }
   <div class="stage">
     <div class="title">
       <h1>ずんだもんと学ぶ<br>障害福祉サービス</h1>
-      <p class="lead">障害福祉サービスの制度の基本を、相談支援事業所に入った新人のずんだもんと先輩のめたんの対話で学びます。利用者の餅田さんの「一人暮らしをしたい」「働きたい」という相談を軸に、7つの章で制度を一周し、付録に年表と用語集を置きました。各章の最後から、その章の問題集に進めます。</p>
+      <p class="lead">障害福祉サービスの制度の基本を、相談支援事業所に入った新人のずんだもんと先輩のめたんの対話で学びます。利用者の餅田さんの「一人暮らしをしたい」「働きたい」という相談を軸に、7つの章で制度を一周し、付録に年表と用語集を置きました。各章の最後に、その章の内容を確かめる理解度チェック（7問）があります。</p>
     </div>
     <div class="chars" aria-hidden="true"><img src="assets/zunda_idea.png" alt="" width="191" height="360"><img src="assets/metan_point.png" alt="" width="175" height="360"></div>
   </div>
@@ -117,7 +152,6 @@ footer p { margin: 0; }
 </div>
 
 <script>
-const DRILL = "./";
 /*__CHAPTERS__*/
 
 const $ = (id) => document.getElementById(id);
@@ -132,16 +166,124 @@ function renderNav() {
 function renderChapter() {
   const c = CH[cur]; const n = cur + 1;
   const prev = cur > 0 ? `<a class="btn secondary" href="#ch${cur}">← ${label(cur - 1)}</a>` : `<span></span>`;
-  const next = cur < CH.length - 1 ? `<a class="btn secondary" href="#ch${cur + 2}">${label(cur + 1)} →</a>` : `<a class="btn secondary" href="${DRILL}">全80問の問題集へ</a>`;
-  const check = c.appendix
-    ? `<div class="check"><h2>総仕上げ</h2><p>付録まで読み終えたら、全80問の問題集で仕上げをどうぞ。間違えた問題だけをやり直すモードもあります。</p><a class="btn primary" href="${DRILL}">全80問の問題集を解く</a></div>`
-    : `<div class="check"><h2>理解度チェック</h2><p>この章の内容を確認する問題集です。1問ごとに解説が出て、最後に分野別の正答率が表示されます。</p><a class="btn primary" href="${DRILL}#s${n}">${n}章の問題集を解く</a></div>`;
+  const next = cur < CH.length - 1 ? `<a class="btn secondary" href="#ch${cur + 2}">${label(cur + 1)} →</a>` : `<span></span>`;
   $("chapter").innerHTML = `
     <div class="chead"><span class="tag tag-blue">${c.appendix ? "付録" : `第${n}章 / 全${CH.filter((x) => !x.appendix).length}章`}</span><h1 class="ct">${esc(c.title)}</h1></div>
     ${c.html}
-    ${check}
+    ${c.check ? `<h2 id="check">理解度チェック</h2><section class="quiz" id="quiz" aria-label="理解度チェック"></section>` : ""}
     <div class="actions"><div class="nav">${prev}${next}</div></div>`;
+  if (c.check) renderCheck(c.check, $("quiz"), null);
   document.title = `${c.title} | ずんだもんと学ぶ障害福祉サービス`;
+}
+
+// Chapter-end check: choice / ○× / fill are scored automatically; essay is compared with a model answer and self-checked.
+const TYPE_LABEL = { truefalse: "○×", choice: "選択", fill: "穴埋め", essay: "説明してみよう" };
+function el(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") e.className = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) if (k != null) e.append(k);
+  return e;
+}
+const normalize = (s) => s.normalize("NFKC").toLowerCase().replace(/[\s「」『』"'。、.,]/g, "");
+const scrollToSec = (ref) => { const t = document.getElementById(`sec-${ref.replace(".", "-")}`); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); };
+const refLink = (ref) => el("button", { type: "button", class: "reflink", onclick: () => scrollToSec(ref) }, `本文の ${ref} 節を読み返す ↑`);
+const line = (who, text) => el("p", { class: `line ${who}` }, el("span", { class: "who" }, who === "z" ? "ずんだもん" : "四国めたん"), text);
+
+function renderCheck(qs, box, only) {
+  const idx = only || qs.map((_, i) => i);
+  const auto = idx.filter((i) => qs[i].type !== "essay");
+  const res = {};
+  const progress = el("p", { class: "note", role: "status" });
+  const result = el("div", { class: "qresult", hidden: "" });
+  const restart = (sel) => { renderCheck(qs, box, sel); $("check").scrollIntoView({ behavior: "smooth", block: "start" }); };
+  const intro = only
+    ? el("p", { class: "note" }, `間違えた ${only.length} 問だけ出題しています。`, el("a", { href: "#check", onclick: (e) => { e.preventDefault(); restart(null); } }, "全問に戻す"))
+    : el("p", { class: "note" }, `全${qs.length}問。選択・○×・穴埋めは自動で採点されます。「説明してみよう」は解答例と見比べて、自己採点してください。`);
+
+  function explain(card, q, ok) {
+    card.append(el("div", { class: "explain " + (ok ? "ok" : "ng") },
+      el("p", { class: "verdict" }, ok ? "正解です" : "おしい！"),
+      el("p", {}, q.explain), refLink(q.ref)));
+  }
+  function done(i, ok) {
+    res[i] = ok;
+    const answered = auto.filter((j) => j in res).length;
+    const correct = auto.filter((j) => res[j]).length;
+    progress.textContent = `回答 ${answered} / ${auto.length} 問・正解 ${correct} 問`;
+    if (answered === auto.length) showResult(correct);
+  }
+  function showResult(correct) {
+    const missed = auto.filter((j) => !res[j]);
+    const msg = correct === auto.length ? "全問正解なのだ！ この章は、もう後輩に説明できるのだ！"
+      : correct / auto.length >= 0.6 ? "あと少しなのだ。間違えた問題の節だけ、読み返してくるのだ。"
+      : "まだあやしいのだ……。本文をもう一度読んでから、再挑戦するのだ。";
+    const refs = [...new Set(missed.map((j) => qs[j].ref))];
+    result.replaceChildren(
+      el("p", { class: "score" }, `${correct} / ${auto.length} 問 正解`),
+      line("z", msg),
+      refs.length ? el("p", {}, "読み返す節：", refs.flatMap((r, k) => [k ? "、" : "", el("button", { type: "button", class: "reflink", onclick: () => scrollToSec(r) }, r)])) : null,
+      el("div", { class: "btns" },
+        missed.length ? el("button", { type: "button", class: "btn primary", onclick: () => restart(missed) }, "間違えた問題だけもう一度") : null,
+        el("button", { type: "button", class: "btn secondary", onclick: () => restart(null) }, "全部もう一度")));
+    result.hidden = false;
+  }
+  function choice(card, q, i, labels, answer) {
+    const list = el("div", { class: "opts" + (labels.length === 2 ? " tf" : "") });
+    labels.forEach((t, k) => list.append(el("button", { type: "button", class: "opt", onclick: (e) => {
+      const ok = k === answer;
+      list.querySelectorAll("button").forEach((b, j) => { b.disabled = true; if (j === answer) b.classList.add("is-answer"); });
+      if (!ok) e.currentTarget.classList.add("is-wrong");
+      explain(card, q, ok); done(i, ok);
+    } }, t)));
+    card.append(list);
+  }
+  function fill(card, q, i) {
+    const input = el("input", { type: "text", placeholder: "ここに入力", "aria-label": "答え" });
+    const btn = el("button", { type: "button", class: "qbtn" }, "答え合わせ");
+    const check = () => {
+      if (btn.disabled || !input.value.trim()) return;
+      const ok = q.accept.map(normalize).includes(normalize(input.value));
+      input.disabled = btn.disabled = true;
+      input.classList.add(ok ? "is-correct" : "is-wrong");
+      if (!ok) card.append(el("p", {}, `正解：${q.accept[0]}`));
+      explain(card, q, ok); done(i, ok);
+    };
+    btn.addEventListener("click", check);
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) check(); });
+    card.append(el("div", { class: "fillrow" }, input, btn));
+  }
+  function essay(card, q) {
+    const area = el("textarea", { rows: "5", placeholder: "自分の言葉で書いてみよう（採点はされません）", "aria-label": "解答" });
+    const btn = el("button", { type: "button", class: "qbtn" }, "解答例を見る");
+    btn.addEventListener("click", () => {
+      btn.disabled = true;
+      card.append(el("div", { class: "explain" },
+        el("p", { class: "model-title" }, "解答例"), el("p", {}, q.model),
+        el("p", { class: "points-title" }, "書けていたポイントにチェックしよう"),
+        el("div", { class: "points" }, q.points.map((p) => el("label", {}, el("input", { type: "checkbox" }), p))),
+        refLink(q.ref)));
+    });
+    card.append(area, btn);
+  }
+
+  box.replaceChildren(intro);
+  idx.forEach((i) => {
+    const q = qs[i];
+    const card = el("div", { class: "qcard" },
+      el("div", { class: "qhead" }, el("span", {}, `Q${i + 1}`), el("span", { class: "tag tag-blue" }, TYPE_LABEL[q.type])),
+      el("p", { class: "qtext" }, q.q));
+    if (q.type === "truefalse") choice(card, q, i, ["○", "×"], q.answer ? 0 : 1);
+    else if (q.type === "choice") choice(card, q, i, q.choices, q.answer);
+    else if (q.type === "fill") fill(card, q, i);
+    else essay(card, q);
+    box.append(card);
+  });
+  box.append(progress, result);
+  progress.textContent = `回答 0 / ${auto.length} 問`;
 }
 function scrollToChapter() { window.scrollTo({ top: $("chapters").offsetTop - 12, behavior: "auto" }); }
 function go(i) { cur = i; history.replaceState(null, "", `#ch${i + 1}`); renderNav(); renderChapter(); scrollToChapter(); }

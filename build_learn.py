@@ -4,12 +4,17 @@
 Markdown subset: front matter (title), :::message blocks, ##/### headings,
 dialogue lines "**名前**：本文", "- " / "1. " lists, "> " quotes, tables,
 paragraphs, inline **bold**. "### コラム ..." sections render as a box.
+Numbered sections ("## 1.2　...") get an id so the chapter-end check can link back.
+
+Chapter-end checks live in content/checks/NN.json (same question format as
+zundamon-drill: truefalse / choice / fill / essay, each with the section it refers to).
 """
 import html, json, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CONTENT = ROOT / "content"
+CHECKS = CONTENT / "checks"
 TEMPLATE = ROOT / "learn-template.html"
 OUT = ROOT / "learn.html"
 
@@ -75,7 +80,9 @@ def convert(md):
                 column_open = True
                 out.append(f"<div class=\"column\"><div class=\"column-title\"><span class=\"tag tag-blue\">コラム</span><span>{inline(text[len('コラム'):].strip(' 　'))}</span></div>")
             else:
-                out.append(f"<h{level}>{inline(text)}</h{level}>")
+                sec = re.match(r"^(\d+\.\d+)\s", text)
+                attr = f' id="sec-{sec.group(1).replace(".", "-")}"' if sec and level == 2 else ""
+                out.append(f"<h{level}{attr}>{inline(text)}</h{level}>")
             i += 1; continue
         d = re.match(r"^\*\*(ずんだもん|四国めたん|めたん)\*\*[：:]\s*(.*)$", ln)
         if d:
@@ -111,6 +118,29 @@ def convert(md):
     close_column()
     return title, "".join(out)
 
+def load_check(stem, body):
+    p = CHECKS / f"{stem}.json"
+    if not p.exists():
+        return None
+    qs = json.loads(p.read_text(encoding="utf-8"))["questions"]
+    secs = set(s.replace("-", ".") for s in re.findall(r'id="sec-([\d-]+)"', body))
+    errors = []
+    for i, q in enumerate(qs, 1):
+        need = {"truefalse": ("q", "answer", "explain"), "choice": ("q", "choices", "answer", "explain"),
+                "fill": ("q", "accept", "explain"), "essay": ("q", "model", "points")}.get(q.get("type"))
+        if need is None:
+            errors.append(f"Q{i}: unknown type {q.get('type')}"); continue
+        errors += [f"Q{i}: missing {k}" for k in need + ("ref",) if k not in q]
+        if q["type"] == "truefalse" and not isinstance(q.get("answer"), bool):
+            errors.append(f"Q{i}: answer must be true/false")
+        if q["type"] == "choice" and not (isinstance(q.get("answer"), int) and 0 <= q["answer"] < len(q.get("choices", []))):
+            errors.append(f"Q{i}: answer out of range")
+        if q.get("ref") not in secs:
+            errors.append(f"Q{i}: ref {q.get('ref')} is not a section of this chapter")
+    if errors:
+        sys.exit(f"{p.name}: " + "; ".join(errors))
+    return qs
+
 def main():
     chapters = []
     for p in sorted(CONTENT.glob("*.md")):
@@ -118,13 +148,15 @@ def main():
         n = int(p.stem)
         appendix = "付録" in title
         z = len(re.findall(r'class="line z"', body)); mm = len(re.findall(r'class="line m"', body))
-        chapters.append({"n": n, "title": title, "html": body, "appendix": appendix, "chars": len(p.read_text(encoding="utf-8")), "z": z, "m": mm})
+        check = load_check(p.stem, body)
+        chapters.append({"n": n, "title": title, "html": body, "appendix": appendix, "check": check, "chars": len(p.read_text(encoding="utf-8")), "z": z, "m": mm})
     tpl = TEMPLATE.read_text(encoding="utf-8")
-    data = json.dumps([{k: c[k] for k in ("title", "html", "appendix")} for c in chapters], ensure_ascii=False)
+    data = json.dumps([{k: c[k] for k in ("title", "html", "appendix", "check")} for c in chapters], ensure_ascii=False)
     data = data.replace("</script", "<\\/script")
     OUT.write_text(tpl.replace("/*__CHAPTERS__*/", "const CH = " + data + ";"), encoding="utf-8")
     for c in chapters:
-        print(f"{c['n']:02d} {c['title']}: {c['chars']} chars, ずんだもん {c['z']} / めたん {c['m']}")
+        q = f", check {len(c['check'])}問" if c["check"] else ""
+        print(f"{c['n']:02d} {c['title']}: {c['chars']} chars, ずんだもん {c['z']} / めたん {c['m']}{q}")
     print("total chars", sum(c["chars"] for c in chapters), "->", OUT.name, OUT.stat().st_size, "bytes")
 
 if __name__ == "__main__":
