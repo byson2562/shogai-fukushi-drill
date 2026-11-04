@@ -218,17 +218,18 @@ function renderCheck(qs, box, only) {
   }
   function showResult(correct) {
     const missed = auto.filter((j) => !res[j]);
-    const msg = correct === auto.length ? "全問正解なのだ！ この章は、もう後輩に説明できるのだ！"
+    const msg = correct === auto.length ? (only ? "間違えた問題も、もう大丈夫なのだ！" : "全問正解なのだ！ この章は、もう後輩に説明できるのだ！")
       : correct / auto.length >= 0.6 ? "あと少しなのだ。間違えた問題の節だけ、読み返してくるのだ。"
       : "まだあやしいのだ……。本文をもう一度読んでから、再挑戦するのだ。";
     const refs = [...new Set(missed.map((j) => qs[j].ref))];
-    result.replaceChildren(
+    result.replaceChildren(...[
       el("p", { class: "score" }, `${correct} / ${auto.length} 問 正解`),
       line("z", msg),
       refs.length ? el("p", {}, "読み返す節：", refs.flatMap((r, k) => [k ? "、" : "", el("button", { type: "button", class: "reflink", onclick: () => scrollToSec(r) }, r)])) : null,
       el("div", { class: "btns" },
         missed.length ? el("button", { type: "button", class: "btn primary", onclick: () => restart(missed) }, "間違えた問題だけもう一度") : null,
-        el("button", { type: "button", class: "btn secondary", onclick: () => restart(null) }, "全部もう一度")));
+        el("button", { type: "button", class: "btn secondary", onclick: () => restart(null) }, "全部もう一度")),
+    ].filter(Boolean));
     result.hidden = false;
   }
   function choice(card, q, i, labels, answer) {
