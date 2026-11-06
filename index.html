@@ -519,8 +519,28 @@ let state = { v: QV, screen: "start", mode: "sections", order: [], idx: 0, answe
 let selected = SECTIONS.map(() => true);
 
 function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
-function load(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+const STORE_PREFIX = "shogai-fukushi-drill:";
+function store(k, v) { try { localStorage.setItem(STORE_PREFIX + k, JSON.stringify(v)); } catch (e) {} }
+function load(k) { try { return JSON.parse(localStorage.getItem(STORE_PREFIX + k)); } catch (e) { return null; } }
+// Records saved before the prefix used bare keys shared by the whole github.io origin; move ours (recognised by shape) once.
+const OURS = {
+  wrong: (o) => o && "v" in o && Array.isArray(o.ids),
+  best: (o) => o && "c" in o && "n" in o && "d" in o,
+  last: (o) => o && "v" in o && o.by && typeof o.by === "object",
+  prev: (o) => o && "v" in o && "mode" in o && "c" in o && "n" in o,
+};
+function migrateStore() {
+  try {
+    for (const [k, isOurs] of Object.entries(OURS)) {
+      if (localStorage.getItem(STORE_PREFIX + k) !== null) continue;
+      const raw = localStorage.getItem(k); if (raw === null) continue;
+      let o; try { o = JSON.parse(raw); } catch (e) { continue; }
+      if (!isOurs(o)) continue;
+      localStorage.setItem(STORE_PREFIX + k, raw); localStorage.removeItem(k);
+    }
+  } catch (e) {}
+}
+migrateStore();
 function esc(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 function wrongIds() { const w = load("wrong"); return (w && w.v === QV && Array.isArray(w.ids)) ? w.ids.filter((i) => i >= 0 && i < Q.length) : []; }
 function lastBySection() { const l = load("last"); return (l && l.v === QV && l.by) ? l.by : {}; }
