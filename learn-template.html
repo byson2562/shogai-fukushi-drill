@@ -172,7 +172,7 @@ function renderChapter() {
     ${c.html}
     ${c.check ? `<h2 id="check">理解度チェック</h2><section class="quiz" id="quiz" aria-label="理解度チェック"></section>` : ""}
     <div class="actions"><div class="nav">${prev}${next}</div></div>`;
-  if (c.check) renderCheck(c.check, $("quiz"), null);
+  if (c.check) renderCheck(c, $("quiz"));
   document.title = `${c.title} | ずんだもんと学ぶ障害福祉サービス`;
 }
 
@@ -193,16 +193,30 @@ const scrollToSec = (ref) => { const t = document.getElementById(`sec-${ref.repl
 const refLink = (ref) => el("button", { type: "button", class: "reflink", onclick: () => scrollToSec(ref) }, `本文の ${ref} 節を読み返す ↑`);
 const line = (who, text) => el("p", { class: `line ${who}` }, el("span", { class: "who" }, who === "z" ? "ずんだもん" : "四国めたん"), text);
 
-function renderCheck(qs, box, only) {
-  const idx = only || qs.map((_, i) => i);
+// Answers are kept per chapter in localStorage (shogai-fukushi-drill:check:NN), so reopening a chapter shows the last attempt.
+const STORE_PREFIX = "shogai-fukushi-drill:";
+const checkKey = (c) => `${STORE_PREFIX}check:${c.checkId}`;
+function loadCheck(c) {
+  try { const s = JSON.parse(localStorage.getItem(checkKey(c))); return s && s.v === c.checkV && s.a && typeof s.a === "object" ? s : null; } catch (e) { return null; }
+}
+function saveCheck(c, s) { try { localStorage.setItem(checkKey(c), JSON.stringify(s)); } catch (e) {} }
+
+function renderCheck(c, box) {
+  const qs = c.check;
+  const st = loadCheck(c) || { v: c.checkV, only: null, a: {} };
+  const only = Array.isArray(st.only) ? st.only.filter((i) => qs[i] && qs[i].type !== "essay") : null;
+  const idx = only && only.length ? only : qs.map((_, i) => i);
   const auto = idx.filter((i) => qs[i].type !== "essay");
   const res = {};
+  const save = () => saveCheck(c, st);
   const progress = el("p", { class: "note", role: "status" });
   const result = el("div", { class: "qresult", hidden: "" });
-  const restart = (sel) => { renderCheck(qs, box, sel); $("check").scrollIntoView({ behavior: "smooth", block: "start" }); };
-  const intro = only
+  const restart = (sel) => { saveCheck(c, { v: c.checkV, only: sel, a: {} }); renderCheck(c, box); $("check").scrollIntoView({ behavior: "smooth", block: "start" }); };
+  const restored = idx.some((i) => st.a[i]);
+  const intro = only && only.length
     ? el("p", { class: "note" }, `間違えた ${only.length} 問だけ出題しています。`, el("a", { href: "#check", onclick: (e) => { e.preventDefault(); restart(null); } }, "全問に戻す"))
-    : el("p", { class: "note" }, `全${qs.length}問。選択・○×・穴埋めは自動で採点されます。「説明してみよう」は解答例と見比べて、自己採点してください。`);
+    : el("p", { class: "note" }, `全${qs.length}問。選択・○×・穴埋めは自動で採点されます。「説明してみよう」は解答例と見比べて、自己採点してください。`,
+      restored ? "前回の回答を表示しています。" : null);
 
   function explain(card, q, ok) {
     card.append(el("div", { class: "explain " + (ok ? "ok" : "ng") },
@@ -234,13 +248,16 @@ function renderCheck(qs, box, only) {
   }
   function choice(card, q, i, labels, answer) {
     const list = el("div", { class: "opts" + (labels.length === 2 ? " tf" : "") });
-    labels.forEach((t, k) => list.append(el("button", { type: "button", class: "opt", onclick: (e) => {
+    const pick = (k) => {
       const ok = k === answer;
       list.querySelectorAll("button").forEach((b, j) => { b.disabled = true; if (j === answer) b.classList.add("is-answer"); });
-      if (!ok) e.currentTarget.classList.add("is-wrong");
+      if (!ok) list.children[k].classList.add("is-wrong");
       explain(card, q, ok); done(i, ok);
-    } }, t)));
+    };
+    labels.forEach((t, k) => list.append(el("button", { type: "button", class: "opt", onclick: () => { st.a[i] = { k }; save(); pick(k); } }, t)));
     card.append(list);
+    const s = st.a[i];
+    if (s && Number.isInteger(s.k) && s.k >= 0 && s.k < labels.length) pick(s.k);
   }
   function fill(card, q, i) {
     const input = el("input", { type: "text", placeholder: "ここに入力", "aria-label": "答え" });
@@ -253,38 +270,52 @@ function renderCheck(qs, box, only) {
       if (!ok) card.append(el("p", {}, `正解：${q.accept[0]}`));
       explain(card, q, ok); done(i, ok);
     };
-    btn.addEventListener("click", check);
-    input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) check(); });
+    const submit = () => { if (btn.disabled || !input.value.trim()) return; st.a[i] = { t: input.value }; save(); check(); };
+    btn.addEventListener("click", submit);
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) submit(); });
     card.append(el("div", { class: "fillrow" }, input, btn));
+    const s = st.a[i];
+    if (s && typeof s.t === "string") { input.value = s.t; check(); }
   }
-  function essay(card, q) {
+  function essay(card, q, i) {
+    const s = st.a[i] = Object.assign({ t: "", shown: false, pts: [] }, st.a[i]);
     const area = el("textarea", { rows: "5", placeholder: "自分の言葉で書いてみよう（採点はされません）", "aria-label": "解答" });
+    area.value = typeof s.t === "string" ? s.t : "";
+    area.addEventListener("input", () => { s.t = area.value; save(); });
     const btn = el("button", { type: "button", class: "qbtn" }, "解答例を見る");
-    btn.addEventListener("click", () => {
+    const show = () => {
       btn.disabled = true;
+      const boxes = q.points.map((p, k) => {
+        const cb = el("input", { type: "checkbox" });
+        cb.checked = !!s.pts[k];
+        cb.addEventListener("change", () => { s.pts[k] = cb.checked; save(); });
+        return el("label", {}, cb, p);
+      });
       card.append(el("div", { class: "explain" },
         el("p", { class: "model-title" }, "解答例"), el("p", {}, q.model),
         el("p", { class: "points-title" }, "書けていたポイントにチェックしよう"),
-        el("div", { class: "points" }, q.points.map((p) => el("label", {}, el("input", { type: "checkbox" }), p))),
+        el("div", { class: "points" }, boxes),
         refLink(q.ref)));
-    });
+    };
+    btn.addEventListener("click", () => { s.shown = true; save(); show(); });
     card.append(area, btn);
+    if (s.shown) show();
   }
 
   box.replaceChildren(intro);
+  box.append(progress, result);
+  progress.textContent = `回答 0 / ${auto.length} 問`;
   idx.forEach((i) => {
     const q = qs[i];
     const card = el("div", { class: "qcard" },
       el("div", { class: "qhead" }, el("span", {}, `Q${i + 1}`), el("span", { class: "tag tag-blue" }, TYPE_LABEL[q.type])),
       el("p", { class: "qtext" }, q.q));
+    box.insertBefore(card, progress);
     if (q.type === "truefalse") choice(card, q, i, ["○", "×"], q.answer ? 0 : 1);
     else if (q.type === "choice") choice(card, q, i, q.choices, q.answer);
     else if (q.type === "fill") fill(card, q, i);
-    else essay(card, q);
-    box.append(card);
+    else essay(card, q, i);
   });
-  box.append(progress, result);
-  progress.textContent = `回答 0 / ${auto.length} 問`;
 }
 function scrollToChapter() { window.scrollTo({ top: $("chapters").offsetTop - 12, behavior: "auto" }); }
 function go(i) { cur = i; history.replaceState(null, "", `#ch${i + 1}`); renderNav(); renderChapter(); scrollToChapter(); }

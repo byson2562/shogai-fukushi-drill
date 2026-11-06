@@ -9,7 +9,7 @@ Numbered sections ("## 1.2　...") get an id so the chapter-end check can link b
 Chapter-end checks live in content/checks/NN.json (same question format as
 zundamon-drill: truefalse / choice / fill / essay, each with the section it refers to).
 """
-import html, json, re, sys
+import hashlib, html, json, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -149,9 +149,11 @@ def main():
         appendix = "付録" in title
         z = len(re.findall(r'class="line z"', body)); mm = len(re.findall(r'class="line m"', body))
         check = load_check(p.stem, body)
-        chapters.append({"n": n, "title": title, "html": body, "appendix": appendix, "check": check, "chars": len(p.read_text(encoding="utf-8")), "z": z, "m": mm})
+        # checkV changes whenever the questions change, so answers saved in the browser for old questions are dropped.
+        check_v = hashlib.sha1(json.dumps(check, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:10] if check else None
+        chapters.append({"n": n, "title": title, "html": body, "appendix": appendix, "check": check, "checkId": p.stem, "checkV": check_v, "chars": len(p.read_text(encoding="utf-8")), "z": z, "m": mm})
     tpl = TEMPLATE.read_text(encoding="utf-8")
-    data = json.dumps([{k: c[k] for k in ("title", "html", "appendix", "check")} for c in chapters], ensure_ascii=False)
+    data = json.dumps([{k: c[k] for k in ("title", "html", "appendix", "check", "checkId", "checkV")} for c in chapters], ensure_ascii=False)
     data = data.replace("</script", "<\\/script")
     OUT.write_text(tpl.replace("/*__CHAPTERS__*/", "const CH = " + data + ";"), encoding="utf-8")
     for c in chapters:
